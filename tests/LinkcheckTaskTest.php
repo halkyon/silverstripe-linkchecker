@@ -3,7 +3,7 @@
 class LinkCheckerTest extends SapphireTest {
 	
 	function testLinkCheckerProcessorCreation() {
-		new LinkCheckerProcessor('http://www.silverstripe.com/community-overview');
+		new LinkCheckProcessor('http://www.silverstripe.com/community-overview');
 	}
 	
 }

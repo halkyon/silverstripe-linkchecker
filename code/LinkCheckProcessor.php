@@ -1,6 +1,6 @@
 <?php
 
-class LinkCheckerProcessor extends Object {
+class LinkCheckProcessor extends Object {
 
 	/**
 	 * This is a list of all the status
