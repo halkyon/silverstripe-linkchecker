@@ -3,7 +3,7 @@
 class LinkCheckTask extends WeeklyTask {
 	
 	function process() {
-		$goodLinks = 0;	// 200-299 HTTP status codes
+		$goodLinks = 0;		// 200-299 HTTP status codes
 		$checkLinks = 0;	// 300-399 HTTP status codes
 		$brokenLinks = 0;	//	400-599 HTTP status codes
 		
@@ -11,13 +11,14 @@ class LinkCheckTask extends WeeklyTask {
 		
 		if($pages) {
 			foreach($pages as $page) {
-				$result = new LinkCheckProcessor($page->AbsoluteLink());
+				$processor = new LinkCheckProcessor($page->AbsoluteLink());
+				$result = $processor->run();
 				
 				if($result) {
-					var_dump($result);
+					Debug::show($result);
 				}
 				
-				// Delete the result from memory
+				unset($processor);
 				unset($result);
 			}
 		}

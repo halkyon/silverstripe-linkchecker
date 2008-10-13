@@ -46,17 +46,16 @@ class LinkCheckProcessor extends Object {
 	 */
 	function __construct($url) {
 		$this->url = $url;
-		
-		$this->process();
 	}
 	
 	/**
-	 * This is the default method that is run
-	 * whenever this task is invoked.
+	 * This method needs to be called after this
+	 * class is constructed in order to start the link
+	 * checking process, then return a result.
 	 * 
 	 * @return array Results for each link (link and status code)
 	 */
-	function process() {
+	public function run() {
 		$result = array();
 		
 		// This could take a while to run, so set no time limit
@@ -121,7 +120,7 @@ class LinkCheckProcessor extends Object {
 	 * @param string $url The URL the HTML came from (used to make absolute links)
 	 * @return array List of all the links extracted from the HTML
 	 */
-	function extractLinks($html, $url) {
+	protected function extractLinks($html, $url) {
 		$links = array();
 		$url_info = parse_url($url);
 	
@@ -182,7 +181,7 @@ class LinkCheckProcessor extends Object {
 	 * @param string $url The URL to get
 	 * @return mixed string contents or false
 	 */
-	function fetchHTML($url) {
+	protected function fetchHTML($url) {
 		$contents = '';
 		
 		ini_set('user_agent', 'User-Agent: ' . self::$agent_name);
@@ -195,7 +194,7 @@ class LinkCheckProcessor extends Object {
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {
-				$fp = fsockopen($url_info['host'], 80, $errno, $errstr, 30);
+				$fp = fsockopen($url_info['host'], isset($url_info['port']) ? $url_info['port'] : 80, $errno, $errstr, 30);
 			}
 			
 			if(!$fp) {
@@ -228,7 +227,7 @@ class LinkCheckProcessor extends Object {
 	 * @param string $url The url to get the headers of
 	 * @return mixed string headers or false
 	 */
-	function fetchHeaders($url) {
+	protected function fetchHeaders($url) {
 		$headers = '';
 
 		if($url_info = parse_url($url)) {
@@ -272,7 +271,7 @@ class LinkCheckProcessor extends Object {
 	 * @param array $headers List of headers
 	 * @return array
 	 */
-	function extractStatusCode($headers) {
+	protected function extractStatusCode($headers) {
 		for($i = 0; isset($headers[$i]); $i++) {
 			// Checks if the header is the status header
 			if(preg_match("/HTTP\/[0-9A-Za-z +]/i", $headers[$i])) {
