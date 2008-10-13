@@ -11,22 +11,26 @@
  * 
  * These href values are ignored:
  * 
- * * Anchor links. e.g. "mysite.com/blah#top"
- * * Mailto links. e.g. "mailto:someone@somewhere.com"
+ * - Anchor links. e.g. "mysite.com/blah#top"
+ * - Mailto links. e.g. "mailto:someone@somewhere.com"
  *
- * @TODO How does one pull out the results from this
- * class?
- * 
  * @package linkchecker
  */
 class LinkCheckProcessor extends Object {
 
 	/**
 	 * The agent name for this process used in HTTP headers.
-	 *
 	 * @var string
 	 */
 	protected static $agent_name = 'SilverStripe LinkChecker 0.1';
+	
+	/**
+	 * Set the agent name used in the HTTP headers.
+	 * @param string $name Agent name to be used
+	 */
+	public static function set_agent_name($name) {
+		self::$agent_name = $agent;
+	}
 	
 	/**
 	 * The current URL being parsed for links. This is
@@ -38,7 +42,6 @@ class LinkCheckProcessor extends Object {
 	
 	/**
 	 * Start a new instance of this class.
-	 *
 	 * @param string $url The URL to parse for links
 	 */
 	function __construct($url) {
@@ -50,33 +53,30 @@ class LinkCheckProcessor extends Object {
 	/**
 	 * This is the default method that is run
 	 * whenever this task is invoked.
+	 * 
+	 * @return array Results for each link (link and status code)
 	 */
 	function process() {
-		$missing_links = 0;
-		$check_links = 0;
-		$good_links = 0;
-
+		$result = array();
+		
 		// This could take a while to run, so set no time limit
 		set_time_limit(0);
 		
-		/* This is used for ob_flush to work */
+		// This is used for ob_flush to work
 		if(ob_get_length() === false) ob_start();
 		
-		// Get the HTML from the URL
 		$html = $this->fetchHTML($this->url);
 
-		// If no HTML returned, link doesn't exist, so show error
-		if(!$html) return "$this->url doesn't appear to exist.\r\n";
+		if(!$html) echo "$this->url doesn't appear to exist.\r\n";
 
-		// Extract all the links from the HTML
 		$links = $this->extractLinks($html, $this->url);
 		
-		// HTML stored in memory is no longer required
+		// HTML stored in memory is no longer required, discard it
 		unset($html);
 	
 		echo "Getting HTML from {$this->url}\r\n";
-	
-		if(empty($links)) return "$this->url doesn't appear to have any links.\r\n";
+
+		if(empty($links)) echo "$this->url doesn't appear to have any links.\r\n";
 		
 		// We only need unique links, so take any duplicates and discard them
 		$links = array_values(array_unique($links));
@@ -90,19 +90,25 @@ class LinkCheckProcessor extends Object {
 		// Each unique link needs to be checked to see what status code is returned
 		for($i = 0; isset($links[$i]) && !connection_aborted(); ++$i) {
 				
-			/* give server a break after checking each link */
+			// Give server a break after checking each link
 			usleep(500000);
-				
+
+			// Get the headers for the link
 			$headers = $this->fetchHeaders(html_entity_decode($links[$i]));
 
+			// Get the status code from the headers
 			$status = $this->extractStatusCode($headers);
-				
-			var_dump($status);
-			
-			// Flush the output buffer
+
+			// Build the results (link, code, status)
+			$result['Link'] = $links[$i];
+			$result['Code'] = $status[0];
+			$result['Status'] = $status[1];
+
 			flush();
 			ob_flush();
 		}
+		
+		return $result;
 	}
 
 	/**
@@ -147,11 +153,11 @@ class LinkCheckProcessor extends Object {
 					for($j = 0; isset($cur_dir[$j]); $j++) $cur_dir[$j] = '/' . $cur_dir[$j];
 					
 					while($done) {
-						/*  if no more ./ or ../ then it's done */
+						// if no more ./ or ../ then it's done
 						if($url{0} != '.') {
 							$links[] = $url_info['scheme'] . '://' . $url_info['host'] . implode('', $cur_dir) . '/' . $url;
 							$done = false;
-						} elseif(substr($url, 0, 2 ) == './') { /* remove same dir as that is the default */
+						} elseif(substr($url, 0, 2 ) == './') { // remove same dir as that is the default
 							$url = substr($url, 2);
 						} else {
 							$url = substr($url, 3);
@@ -226,10 +232,11 @@ class LinkCheckProcessor extends Object {
 		$headers = '';
 
 		if($url_info = parse_url($url)) {
+			
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {
-				$fp = fsockopen($url_info['host'], 80, $errno, $errstr, 30);
+				$fp = fsockopen($url_info['host'], isset($url_info['port']) ? $url_info['port'] : 80, $errno, $errstr, 30);
 			}
 	
 			if(!$fp) {

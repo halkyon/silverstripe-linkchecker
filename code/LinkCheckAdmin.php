@@ -5,10 +5,10 @@
  * 
  * @package linkchecker
  */
-class LinkCheckerAdmin extends LeftAndMain {
+class LinkCheckAdmin extends LeftAndMain {
 	
 	function Link() {
-		return 'admin/linkchecker/$Action/$ID';
+		return 'admin/linkcheck/$Action/$ID';
 	}
 	
 }
