@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This class handles taking a URL, taking the HTML that
+ * is returned from a URL - by using CURL, or parse_url()
+ * and then extracting all the href values from <a> elements
+ * in the HTML. Each of those href values is then checked
+ * to see what the response code returned is - we do this
+ * in a similar method to retrieving the HTML and headers,
+ * by using CURL or parse_url().
+ * 
+ * These href values are ignored:
+ * 
+ * * Anchor links. e.g. "mysite.com/blah#top"
+ * * Mailto links. e.g. "mailto:someone@somewhere.com"
+ *
+ * @TODO How does one pull out the results from this
+ * class?
+ * 
+ * @package linkchecker
+ */
 class LinkCheckProcessor extends Object {
 
 	/**
@@ -80,7 +99,7 @@ class LinkCheckProcessor extends Object {
 			if(!empty($headers['http_code'])) {
 				$status = $headers['http_code'];
 			} else {
-				// Conventional method is to extract it from the text
+				// Conventional method is to extract it from the header
 				$status = $this->extractStatusCode($headers);
 			}
 				
@@ -93,7 +112,10 @@ class LinkCheckProcessor extends Object {
 	}
 
 	/**
-	 * Extracts links from HTML passed in.
+	 * Extracts links from the HTML.
+	 * 
+	 * This does the hard work of extracting all the <a href=""> links
+	 * from the HTML, using preg_match_all()
 	 *
 	 * @param string $html The HTML to extract links from
 	 * @param string $url The URL the HTML came from (used to make absolute links)
@@ -169,7 +191,10 @@ class LinkCheckProcessor extends Object {
 	}
 	
 	/**
-	 * Get information on a URL.
+	 * Return HTML content from a URL.
+	 * 
+	 * CURL is used if available, falling back to parse_url()
+	 * if CURL is not installed with PHP.
 	 *
 	 * @param string $url The URL to get
 	 * @return mixed string contents or false
@@ -224,7 +249,10 @@ class LinkCheckProcessor extends Object {
 	}
 	
 	/**
-	 * Get headers from a URL.
+	 * Return HTTP headers for a URL given.
+	 * 
+	 * CURL is used if available, falling back to parse_url()
+	 * if CURL is not installed with PHP.
 	 *
 	 * @param string $url The url to get the headers of
 	 * @return mixed string headers or false
@@ -282,6 +310,13 @@ class LinkCheckProcessor extends Object {
 	
 	/**
 	 * Pull out the HTTP status code from the headers.
+	 * 
+	 * This is only needing to be used if CURL is not
+	 * installed.
+	 * 
+	 * @TODO Make sure this only returns a status code,
+	 * to make it consistent with the way the status code
+	 * is returned using CURL.
 	 *
 	 * @param array $headers List of headers
 	 * @return array
