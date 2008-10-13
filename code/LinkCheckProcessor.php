@@ -3,22 +3,22 @@
 class LinkCheckProcessor extends Object {
 
 	/**
-	 * The agent name for this process, used
-	 * in the HTTP headers.
+	 * The agent name for this process used in HTTP headers.
 	 *
 	 * @var string
 	 */
 	protected static $agent_name = 'SilverStripe LinkChecker 0.1';
 	
 	/**
-	 * The current URL being parsed for links.
+	 * The current URL being parsed for links. This is
+	 * a required parameter for when this class is constructed.
 	 *
 	 * @var string
 	 */
 	protected $url;
 	
 	/**
-	 * Start a new instance of LinkcheckTask.
+	 * Start a new instance of this class.
 	 *
 	 * @param string $url The URL to parse for links
 	 */
