@@ -25,7 +25,9 @@ class LinkCheckProcessor extends Object {
 	protected static $agent_name = 'SilverStripe LinkChecker 0.1';
 	
 	/**
-	 * Set the agent name used in the HTTP headers.
+	 * Set the agent name used in the HTTP headers, for
+	 * when the link checker visits URLs.
+	 * 
 	 * @param string $name Agent name to be used
 	 */
 	public static function set_agent_name($name) {
