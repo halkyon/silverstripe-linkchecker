@@ -13,7 +13,7 @@
  * 
  * - Anchor links. e.g. "mysite.com/blah#top"
  * - Mailto links. e.g. "mailto:someone@somewhere.com"
- *
+ * 
  * @package linkchecker
  */
 class LinkCheckProcessor extends Object {
