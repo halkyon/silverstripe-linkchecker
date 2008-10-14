@@ -33,33 +33,32 @@ class LinkCheckTask extends WeeklyTask {
 
 			foreach($pages as $page) {
 				$processor = new LinkCheckProcessor($page->AbsoluteLink());
-				$result = $processor->run();
+				$results = $processor->run();
 				
-				if($result) {
-					// Iterate the appropriate counter for the result status code
-					if($result['Code'] >= 200 && $result['Code'] <= 299) {
-						$goodLinks++;
-					} elseif($result['Code'] >= 300 && $result['Code'] <= 399) {
-						$checkLinks++;
-					} elseif($result['Code'] >= 400 && $result['Code'] <= 599) {
-						$brokenLinks++;
-					}
-					
-					// If the result is "Bad" (broken), create a BrokenLink record
-					if($result['Code'] >= 400 && $result['Code'] <= 599) {
-						$brokenLink = new BrokenLink();
-						$brokenLink->Link = $result['Link'];
-						$brokenLink->Code = $result['Code'];
-						$brokenLink->Status = $result['Status'];
-						$brokenLink->LinkCheckRunID = $run->ID;
-						$brokenLink->PageID = $page->ID;
-						$brokenLink->write();
+				if($results) {
+					foreach($results as $result) {
+						
+						// Iterate the appropriate counter for the result status code
+						if($result['Code'] >= 200 && $result['Code'] <= 299) {
+							$goodLinks++;
+						} elseif($result['Code'] >= 300 && $result['Code'] <= 399) {
+							$checkLinks++;
+						} elseif($result['Code'] >= 400 && $result['Code'] <= 599) {
+							$brokenLinks++;
+						}
+						
+						// If the result is "Bad" (broken), create a BrokenLink record
+						if($result['Code'] >= 400 && $result['Code'] <= 599) {
+							$brokenLink = new BrokenLink();
+							$brokenLink->Link = $result['Link'];
+							$brokenLink->Code = $result['Code'];
+							$brokenLink->Status = $result['Status'];
+							$brokenLink->LinkCheckRunID = $run->ID;
+							$brokenLink->PageID = $page->ID;
+							$brokenLink->write();
+						}
 					}
 				}
-				
-				// Unset processor and result from memory after each page check
-				unset($processor);
-				unset($result);
 			}
 			
 			// Find the URL to the LinkCheckAdmin section in the CMS

@@ -101,9 +101,9 @@ class LinkCheckProcessor extends Object {
 			$status = $this->extractStatusCode($headers);
 
 			// Build the results (link, code, status)
-			$result['Link'] = $links[$i];
-			$result['Code'] = $status[0];
-			$result['Status'] = $status[1];
+			$result[$i]['Link'] = $links[$i];
+			$result[$i]['Code'] = $status[0];
+			$result[$i]['Status'] = $status[1];
 
 			flush();
 			ob_flush();
@@ -233,9 +233,6 @@ class LinkCheckProcessor extends Object {
 		$headers = '';
 
 		if($url_info = parse_url($url)) {
-			
-			var_dump($url_info);
-			
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {
