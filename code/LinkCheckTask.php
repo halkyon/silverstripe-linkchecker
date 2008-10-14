@@ -65,6 +65,9 @@ class LinkCheckTask extends WeeklyTask {
 			// Find the URL to the LinkCheckAdmin section in the CMS
 			$linkcheckAdminLink = Director::absoluteBaseURL() . singleton('LinkCheckAdmin')->Link();
 			
+			// Count the number of BrokenLink records created for this run
+			$runBrokenLinks = $run->BrokenLinks()->Count() ? $run->BrokenLinks()->Count() : 0;
+			
 			echo "SilverStripe Link Checker results";
 			echo "---------------------------------\n\n";
 			
@@ -72,7 +75,7 @@ class LinkCheckTask extends WeeklyTask {
 			echo "$checkLinks links were redirected.";
 			echo "$brokenLinks links were broken, and BrokenLink records were generated for them.\n\n";
 			
-			echo "LinkCheckRun ID #{$run->ID} was created with {$run->BrokenLinks()->Count()} BrokenLink related records.";
+			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.";
 			echo "Please visit $linkcheckAdminLink to see which broken links were found.";
 		}
 	}
