@@ -22,7 +22,7 @@ class LinkCheckProcessor extends Object {
 	 * The agent name for this process used in HTTP headers.
 	 * @var string
 	 */
-	protected static $agent_name = 'SilverStripe LinkChecker 0.1';
+	protected static $agent_name = 'SilverStripe Link Checker 0.1';
 	
 	/**
 	 * Set the agent name used in the HTTP headers, for

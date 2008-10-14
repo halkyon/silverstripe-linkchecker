@@ -21,6 +21,12 @@
  */
 class BrokenLink extends DataObject {
 	
+	static $db = array(
+		'Link' => 'Varchar(255)',
+		'Code' => 'Int',
+		'Status' => 'Varchar(20)'
+	);
+	
 	/**
 	 * A BrokenLink has a single {@link LinkCheckRun}
 	 * as well as a single {@link Page}. LinkCheckRun

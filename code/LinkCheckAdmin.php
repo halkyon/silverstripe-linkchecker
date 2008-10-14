@@ -7,8 +7,11 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
-	function Link() {
-		return 'admin/linkcheck/$Action/$ID';
+	public function Link($action = 'index') {
+		return "admin/linkcheck/$action/";
+	}
+	
+	public function LinkCheckRuns() {
 	}
 	
 }
