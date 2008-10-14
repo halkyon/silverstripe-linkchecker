@@ -44,6 +44,8 @@ class LinkCheckRun extends DataObject {
 	 * ran this task, if applicable.
 	 */
 	function onBeforeWrite() {
+		parent::onBeforeDelete();
+		
 		$this->MemberID = Member::currentUserID() ? Member::currentUserID() : 0;
 	}
 	
@@ -54,6 +56,8 @@ class LinkCheckRun extends DataObject {
 	 * relation.
 	 */
 	function onBeforeDelete() {
+		parent::onBeforeDelete();
+		
 		if($this->BrokenLinks() && ($this->BrokenLinks()->Count() > 0)) {
 			foreach($this->BrokenLinks() as $brokenLink) {
 				$brokenLink->delete();
