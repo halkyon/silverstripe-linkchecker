@@ -66,16 +66,7 @@ class LinkCheckRun extends DataObject {
 			'export'
 		));
 		
-		// Get all Member records in the DB, and source for DropdownField
-		$members = DataObject::get('Member');
-		$membersSource = $members->toDropDownMap('ID', 'FirstName');
-		
 		$fields = new FieldSet(
-			new DropdownField(
-				'MemberID',
-				'Member',
-				$membersSource ? $membersSource : array()
-			),
 			$table
 		);
 		
