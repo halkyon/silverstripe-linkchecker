@@ -100,7 +100,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		);
 		
 		$fields->push(new HiddenField('LinkCheckRunID', '', $run->ID));
-		$fields->push(new HiddenField('ID', '', $runID));
+		$fields->push(new HiddenField('ID', '', $run->ID));
 
 		$actions = new FieldSet(
 			new FormAction('doSave', 'Save')
