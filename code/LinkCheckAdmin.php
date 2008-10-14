@@ -28,12 +28,12 @@ class LinkCheckAdmin extends LeftAndMain {
 	
 	/**
 	 * Return all instances of LinkCheckRun from
-	 * the database.
+	 * the database, sorted by the creation date first.
 	 *
 	 * @return DataObjectSet
 	 */
 	public function LinkCheckRuns() {
-		return DataObject::get('LinkCheckRun');
+		return DataObject::get('LinkCheckRun', '', 'Created DESC');
 	}
 
 	/**

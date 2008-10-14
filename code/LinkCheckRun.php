@@ -41,11 +41,12 @@ class LinkCheckRun extends DataObject {
 	
 	/**
 	 * Return CMS fields suitable for editing an
-	 * instance of LinkCheckRun.
+	 * instance of LinkCheckRun, including linked
+	 * instances of {@link Member} and {@link BrokenLink}.
 	 * 
 	 * @return FieldSet
 	 */
-	function getCMSFields() {
+	public function getCMSFields() {
 		
 		// Get a singleton instance of BrokenLink
 		$SNG_brokenLink = singleton('BrokenLink');
@@ -85,7 +86,7 @@ class LinkCheckRun extends DataObject {
 	 * Before writing, record the member who
 	 * ran this task, if applicable.
 	 */
-	function onBeforeWrite() {
+	public function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
 		$this->MemberID = Member::currentUserID() ? Member::currentUserID() : 0;
@@ -97,7 +98,7 @@ class LinkCheckRun extends DataObject {
 	 * related to this instance through the one-to-many
 	 * relation.
 	 */
-	function onBeforeDelete() {
+	public function onBeforeDelete() {
 		parent::onBeforeDelete();
 		
 		if($this->BrokenLinks() && ($this->BrokenLinks()->Count() > 0)) {

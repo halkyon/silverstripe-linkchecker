@@ -19,7 +19,7 @@ class LinkCheckTask extends WeeklyTask {
 	/**
 	 * Run the LinkCheckTask.
 	 */
-	function process() {
+	public function process() {
 		$goodLinks = 0;   // 200-299 HTTP status codes
 		$checkLinks = 0;  // 300-399 HTTP status codes
 		$brokenLinks = 0; // 400-599 HTTP status codes
