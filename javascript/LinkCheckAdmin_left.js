@@ -40,7 +40,9 @@ function reloadSiteTree() {
 }
 
 appendLoader(function () {
-	if(typeof($('sitetree').selected) == 'undefined');
-	var selectedNode = $('sitetree').getElementsByTagName('li')[1];
-	selectedNode.onselect();
+	if($('sitetree')) {
+		if(typeof($('sitetree').selected) == 'undefined');
+		var selectedNode = $('sitetree').getElementsByTagName('li')[1];
+		selectedNode.onselect();
+	}
 });

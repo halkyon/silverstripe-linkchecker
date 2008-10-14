@@ -10,7 +10,7 @@
 	<div id="sitetree_holder">
 		<% if LinkCheckRuns %>
 			<ul id="sitetree" class="tree unformatted">
-			<li id="$ID" class="root"><a><% _t('LinkCheckAdmin_left.CHECKRUNS','Link check runs') %></a>
+			<li id="$ID" class="root"><a><% _t('LINKCHECKRUNS','Link check runs') %></a>
 				<ul>
 				<% control LinkCheckRuns %>
 					<li id="$ID">
