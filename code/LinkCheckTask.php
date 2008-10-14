@@ -17,6 +17,26 @@
 class LinkCheckTask extends WeeklyTask {
 	
 	/**
+	 * These classes (page types) are ignored,
+	 * and won't be checked for broken links.
+	 * 
+	 * @var array
+	 */
+	protected static $exempt_classes = array(
+		'ErrorPage'
+	);
+	
+	/**
+	 * Set the classes that should be exempt from
+	 * being checked for broken links.
+	 *
+	 * @param array $classes List of classes to ignore
+	 */
+	public static function set_exempt_classes($classes) {
+		self::$exempt_classes = $classes;
+	}
+	
+	/**
 	 * Run the LinkCheckTask.
 	 */
 	public function process() {
@@ -25,13 +45,17 @@ class LinkCheckTask extends WeeklyTask {
 		$brokenLinks = 0; // 400-599 HTTP status codes
 		
 		// Get all Page records from the DB
-		$pages = DataObject::get('Page');
+		$pages = DataObject::get('SiteTree');
 		
 		if($pages) {
 			$run = new LinkCheckRun(); // We have started a new run, create the object and write it
 			$run->write();
 
 			foreach($pages as $page) {
+				if(in_array($page->class, $this->stat('exempt_classes'))) {
+					break;
+				}
+				
 				$processor = new LinkCheckProcessor($page->AbsoluteLink());
 				$results = $processor->run();
 				
