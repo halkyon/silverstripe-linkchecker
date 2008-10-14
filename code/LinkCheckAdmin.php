@@ -119,6 +119,8 @@ class LinkCheckAdmin extends LeftAndMain {
 			$actions
 		);
 		
+		$form->loadDataFrom($run);
+		
 		return $form;
 	}
 	
