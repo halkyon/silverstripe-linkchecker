@@ -68,15 +68,15 @@ class LinkCheckTask extends WeeklyTask {
 			// Count the number of BrokenLink records created for this run
 			$runBrokenLinks = $run->BrokenLinks()->Count() ? $run->BrokenLinks()->Count() : 0;
 			
-			echo "SilverStripe Link Checker results";
+			echo "SilverStripe Link Checker results\n";
 			echo "---------------------------------\n\n";
 			
-			echo "$goodLinks links were OK.";
-			echo "$checkLinks links were redirected.";
-			echo "$brokenLinks links were broken, and BrokenLink records were generated for them.\n\n";
+			echo "$goodLinks links were OK.\n";
+			echo "$checkLinks links were redirected.\n";
+			echo "$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.\n\n";
 			
-			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.";
-			echo "Please visit $linkcheckAdminLink to see which broken links were found.";
+			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
+			echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
 		}
 	}
 	
