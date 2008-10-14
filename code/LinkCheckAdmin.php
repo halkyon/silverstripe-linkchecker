@@ -18,7 +18,8 @@ class LinkCheckAdmin extends LeftAndMain {
 	static $tree_class = 'LinkCheckRun';
 	
 	static $allowed_actions = array(
-		'save'
+		'save',
+		'BrokenLinks'
 	);
 	
 	/**
@@ -40,8 +41,8 @@ class LinkCheckAdmin extends LeftAndMain {
 	 * @param string $action The action to call (defaults to index)
 	 * @return string
 	 */
-	public function Link($action = 'index') {
-		return "admin/linkcheck/$action/";
+	public function Link() {
+		return 'admin/linkcheck';
 	}
 	
 	/**
