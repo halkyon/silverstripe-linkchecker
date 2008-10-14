@@ -40,6 +40,39 @@ class LinkCheckRun extends DataObject {
 	);
 	
 	/**
+	 * Instead of returning CMS fields to edit an
+	 * instance of LinkCheckRun, we return CMS
+	 * fields to edit a BrokenLink record, as we
+	 * want to get them filtered by this ID as
+	 * the parent.
+	 * 
+	 * @return FieldSet
+	 */
+	function brokenLinkCMSFields() {
+		
+		// Set up the TableListField, for viewing BrokenLink
+		// records that have the current LinkCheckRun ID
+		$table = new TableListField(
+			'BrokenLinks',
+			'BrokenLink',
+			$SNG_brokenLink->tableOverviewFields(),
+			"LinkCheckRunID = $this->ID"
+		);
+		
+		// Set permissions (we don't want to allow adding)
+		$table->setPermissions(array(
+			'delete',
+			'export'
+		));
+		
+		$fields = new FieldSet(
+			$table
+		);
+		
+		return $fields;
+	}
+	
+	/**
 	 * Before writing, record the member who
 	 * ran this task, if applicable.
 	 */

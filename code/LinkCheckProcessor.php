@@ -234,6 +234,8 @@ class LinkCheckProcessor extends Object {
 
 		if($url_info = parse_url($url)) {
 			
+			var_dump($url_info);
+			
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {

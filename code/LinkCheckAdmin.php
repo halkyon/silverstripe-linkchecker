@@ -31,32 +31,37 @@ class LinkCheckAdmin extends LeftAndMain {
 	}
 
 	/**
-	 * Return a {@link TableListField} for the current
+	 * Return a {@link Form} instance with a
+	 * a {@link TableListField} for the current
 	 * {@link LinkCheckRun} record that we're currently
 	 * looking it, the ID for that LinkCheckRun record
 	 * is accessible from the URL as the "ID" parameter.
 	 *
-	 * @return TableListField
+	 * @return Form
 	 */
 	public function EditForm() {
+		$fields = new FieldSet();
+		$actions = new FieldSet();
+		
+		// If there's no ID in the URL, just return without doing anything
 		$runID = (int) Director::urlParam('ID');
-		if(!$runID) return false;
+		if(!($runID > 0)) return false;
 		
-		$SNG_brokenLink = singleton('BrokenLink');
+		// Get the LinkCheckRun record from the database
+		$run = DataObject::get_by_id('LinkCheckRun', $runID);
+		if(!$run->exists()) return false;
+
+		// Add the CMS fields for the LinkCheckRun instance
+		$fields->push($run->brokenLinkCMSFields());
 		
-		$table = new TableListField(
-			'BrokenLinks',
-			'BrokenLink',
-			$SNG_brokenLink->tableOverviewFields(),
-			"LinkCheckRunID = $runID"
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
 		);
 		
-		$table->setPermissions(array(
-			'delete',
-			'export'
-		));
-		
-		return $table;
+		return $form;
 	}
 	
 }
