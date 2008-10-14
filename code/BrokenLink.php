@@ -50,6 +50,7 @@ class BrokenLink extends DataObject {
 	public function tableOverviewFields() {
 		$fields = array(
 			'PageID' => 'Page',
+			'Code' => 'Code',
 			'Link' => 'Link',
 			'Status' => 'Status'
 		);
