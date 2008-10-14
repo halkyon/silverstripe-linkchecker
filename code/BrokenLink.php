@@ -41,6 +41,22 @@ class BrokenLink extends DataObject {
 		'Page' => 'Page'
 	);
 	
+	/**
+	 * Return an array of fields, which are shown
+	 * on the actual table for a {@link TableListField}.
+	 * 
+	 * @return array
+	 */
+	function tableOverviewFields() {
+		$fields = array(
+			'PageID' => 'Page',
+			'Link' => 'Link',
+			'Status' => 'Status'
+		);
+		
+		return $fields;
+	}
+	
 }
 
 ?>
