@@ -40,15 +40,15 @@ class LinkCheckRun extends DataObject {
 	);
 	
 	/**
-	 * Instead of returning CMS fields to edit an
-	 * instance of LinkCheckRun, we return CMS
-	 * fields to edit a BrokenLink record, as we
-	 * want to get them filtered by this ID as
-	 * the parent.
+	 * Return CMS fields suitable for editing an
+	 * instance of LinkCheckRun.
 	 * 
 	 * @return FieldSet
 	 */
-	function brokenLinkCMSFields() {
+	function getCMSFields() {
+		
+		// Get a singleton instance of BrokenLink
+		$SNG_brokenLink = singleton('BrokenLink');
 		
 		// Set up the TableListField, for viewing BrokenLink
 		// records that have the current LinkCheckRun ID
@@ -65,7 +65,16 @@ class LinkCheckRun extends DataObject {
 			'export'
 		));
 		
+		// Get all Member records in the DB, and source for DropdownField
+		$members = DataObject::get('Member');
+		$membersSource = $members->toDropDownMap('ID', 'FirstName');
+		
 		$fields = new FieldSet(
+			new DropdownField(
+				'MemberID',
+				'Member',
+				$membersSource ? $membersSource : array()
+			),
 			$table
 		);
 		

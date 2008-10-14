@@ -3,6 +3,12 @@
 /**
  * Link checker CMS interface.
  * 
+ * Provides a CMS interface for {@link LinkCheckRun}
+ * DataObjects, so that a user can manage them. Each
+ * {@link LinkCheckRun} has a one-to-many relationship
+ * with {@link BrokenLink} which represents a single
+ * broken link on a link check "run".
+ * 
  * @uses LinkCheckRun to create a list of link check runs
  * 
  * @package linkchecker
@@ -52,7 +58,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		if(!$run->exists()) return false;
 
 		// Add the CMS fields for the LinkCheckRun instance
-		$fields->push($run->brokenLinkCMSFields());
+		$fields->push($run->getCMSFields());
 		
 		$form = new Form(
 			$this,
