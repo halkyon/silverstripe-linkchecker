@@ -14,7 +14,7 @@
 				<ul>
 				<% control LinkCheckRuns %>
 					<li id="$ID">
-						<a href="$BaseURL/admin/linkcheck/$ID">$Created.Nice</a>
+						<a href="$baseURL/admin/linkcheck/$ID">$Created.Nice</a>
 					</li>
 				<% end_control %>
 				</ul>
