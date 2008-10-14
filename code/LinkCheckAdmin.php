@@ -15,6 +15,12 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
+	static $tree_class = 'LinkCheckRun';
+	
+	static $allowed_actions = array(
+		'save'
+	);
+	
 	/**
 	 * Include some required files, like javascript,
 	 * for this admin interface when this controller
@@ -103,7 +109,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		$fields->push(new HiddenField('ID', '', $run->ID));
 
 		$actions = new FieldSet(
-			new FormAction('doSave', 'Save')
+			new FormAction('save', 'Save')
 		);
 		
 		$form = new Form(
@@ -116,7 +122,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		return $form;
 	}
 	
-	public function doSave($data, $form) {
+	public function save($data, $form) {
 		$validationErrors = false;
 		
 		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
