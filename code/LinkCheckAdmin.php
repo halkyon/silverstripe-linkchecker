@@ -15,13 +15,6 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
-	static $tree_class = 'LinkCheckRun';
-	
-	static $allowed_actions = array(
-		'save',
-		'BrokenLinks'
-	);
-	
 	/**
 	 * Include some required files, like javascript,
 	 * for this admin interface when this controller
@@ -91,7 +84,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		// Get the CMS fields for the LinkCheckRun instance,
 		// put each field into a CompositeField, so we can
 		// just push in any field that happens to be available
-		$runCMSFields = $run->getCMSFields();
+		$runCMSFields = $run->getCMSFields($this);
 		$runCompFields = new CompositeField();
 		if($runCMSFields) foreach($runCMSFields as $runCMSField) {
 			$runCompFields->push($runCMSField);
