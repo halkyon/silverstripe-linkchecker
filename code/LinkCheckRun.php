@@ -47,6 +47,20 @@ class LinkCheckRun extends DataObject {
 	 * @return FieldSet
 	 */
 	public function getCMSFields() {
+		$fields = new FieldSet();
+		
+		if(!($this->BrokenLinks() && $this->BrokenLinks()->Count() > 0)) {
+			
+			// No BrokenLinks are available for this run - show a message
+			$fields->push(
+				new LiteralField(
+					'NoResults',
+					'<p>' . _t('LinkCheckRun.NORESULTS', 'Congratulations, no broken links were found on this site!') . '</p>'
+				)
+			);
+			
+			return $fields;
+		}
 		
 		// Get a singleton instance of BrokenLink
 		$SNG_brokenLink = singleton('BrokenLink');
@@ -66,9 +80,7 @@ class LinkCheckRun extends DataObject {
 			'export'
 		));
 		
-		$fields = new FieldSet(
-			$table
-		);
+		$fields->push($table);
 		
 		return $fields;
 	}
