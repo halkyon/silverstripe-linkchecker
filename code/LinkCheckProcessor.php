@@ -22,17 +22,7 @@ class LinkCheckProcessor extends Object {
 	 * The agent name for this process used in HTTP headers.
 	 * @var string
 	 */
-	protected static $agent_name = 'SilverStripe Link Checker 0.1';
-	
-	/**
-	 * Set the agent name used in the HTTP headers, for
-	 * when the link checker visits URLs.
-	 * 
-	 * @param string $name Agent name to be used
-	 */
-	public static function set_agent_name($name) {
-		self::$agent_name = $agent;
-	}
+	public static $agent_name = 'SilverStripe Link Checker 0.1';
 	
 	/**
 	 * The current URL being parsed for links. This is
@@ -94,16 +84,25 @@ class LinkCheckProcessor extends Object {
 			// Give server a break after checking each link
 			usleep(500000);
 
-			// Get the headers for the link
-			$headers = $this->fetchHeaders(html_entity_decode($links[$i]));
-
-			// Get the status code from the headers
-			$status = $this->extractStatusCode($headers);
-
-			// Build the results (link, code, status)
-			$result[$i]['Link'] = $links[$i];
-			$result[$i]['Code'] = $status[0];
-			$result[$i]['Status'] = $status[1];
+			// First, we need to check the URL exists, before we can get the status
+			if($this->urlExists(html_entity_decode($links[$i]))) {
+				// Get the headers for the link
+				$headers = $this->fetchHeaders(html_entity_decode($links[$i]));
+	
+				// Get the status code from the headers
+				$status = $this->extractStatusCode($headers);
+				
+				// Build the results (link, code, status)
+				$result[$i]['Link'] = $links[$i];
+				$result[$i]['Code'] = $status[0];
+				$result[$i]['Status'] = $status[1];
+				
+			} else {
+				// URL doesn't exist, result is a 404.
+				$result[$i]['Link'] = $links[$i];
+				$result[$i]['Code'] = '404';
+				$result[$i]['Status'] = 'Page not found';
+			}
 
 			flush();
 			ob_flush();
@@ -224,6 +223,18 @@ class LinkCheckProcessor extends Object {
 	}
 	
 	/**
+	 * Check if a given URL actually exists, and can be parsed
+	 * to get the headers and content from.
+	 *
+	 * @param string $url
+	 * @return boolean
+	 */
+	protected function urlExists($url) {
+		$headers = @get_headers($url);
+		return is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/', $headers[0]) : false;
+	}
+	
+	/**
 	 * Return HTTP headers for a URL given.
 	 * 
 	 * @param string $url The url to get the headers of
@@ -233,12 +244,14 @@ class LinkCheckProcessor extends Object {
 		$headers = '';
 
 		if($url_info = parse_url($url)) {
+			$port = (isset($url_info['port'])) ? $url_info['port'] : 80;
+			
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {
-				$fp = fsockopen($url_info['host'], isset($url_info['port']) ? $url_info['port'] : 80, $errno, $errstr, 30);
+				$fp = fsockopen($url_info['host'], $port, $errno, $errstr, 30);
 			}
-	
+			
 			if(!$fp) {
 				echo "$errstr ($errno)\r\n";
 			} else {
