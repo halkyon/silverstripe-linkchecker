@@ -24,7 +24,8 @@ class BrokenLink extends DataObject {
 	static $db = array(
 		'Link' => 'Varchar(255)',
 		'Code' => 'Int',
-		'Status' => 'Varchar(20)'
+		'Status' => 'Varchar(20)',
+		'PageTitle' => 'Varchar(100)'
 	);
 	
 	/**
@@ -56,6 +57,12 @@ class BrokenLink extends DataObject {
 		);
 		
 		return $fields;
+	}
+	
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		
+		$this->PageTitle = $this->Page()->Title;
 	}
 	
 }

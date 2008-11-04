@@ -48,8 +48,9 @@ class LinkCheckRun extends DataObject {
 	 */
 	public function getCMSFields() {
 		$fields = new FieldSet();
+		$brokenLinks = $this->BrokenLinks();
 		
-		if(!($this->BrokenLinks() && $this->BrokenLinks()->Count() > 0)) {
+		if(!($brokenLinks && $brokenLinks->Count() > 0)) {
 			
 			// No BrokenLinks are available for this run - show a message
 			$fields->push(
@@ -73,6 +74,10 @@ class LinkCheckRun extends DataObject {
 			$SNG_brokenLink->tableOverviewFields(),
 			"LinkCheckRunID = $this->ID"
 		);
+		
+		$table->setFieldFormatting(array(
+			'Page.Title' => '<a href=\"admin/show/$PageID\">$PageTitle</a>'
+		));
 		
 		// Set permissions (we don't want to allow adding)
 		$table->setPermissions(array(
