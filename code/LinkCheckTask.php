@@ -22,20 +22,10 @@ class LinkCheckTask extends WeeklyTask {
 	 * 
 	 * @var array
 	 */
-	protected static $exempt_classes = array(
+	public static $exempt_classes = array(
 		'ErrorPage'
 	);
-	
-	/**
-	 * Set the classes that should be exempt from
-	 * being checked for broken links.
-	 *
-	 * @param array $classes List of classes to ignore
-	 */
-	public static function set_exempt_classes($classes) {
-		self::$exempt_classes = $classes;
-	}
-	
+		
 	/**
 	 * Run the LinkCheckTask.
 	 */
