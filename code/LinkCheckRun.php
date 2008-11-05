@@ -50,7 +50,7 @@ class LinkCheckRun extends DataObject {
 		$fields = new FieldSet();
 		$brokenLinks = $this->BrokenLinks();
 		
-		if($brokenLinks && $brokenLinks->Count() > 0) {
+		if($brokenLinks && ($brokenLinks->Count() > 0)) {
 			$table = $this->brokenLinksTable();
 			$fields->push($table);
 		} else {
@@ -117,8 +117,9 @@ class LinkCheckRun extends DataObject {
 	public function onBeforeDelete() {
 		parent::onBeforeDelete();
 		
-		if($this->BrokenLinks() && ($this->BrokenLinks()->Count() > 0)) {
-			foreach($this->BrokenLinks() as $brokenLink) {
+		$brokenLinks = $this->BrokenLinks();
+		if($brokenLinks && ($brokenLinks->Count() > 0)) {
+			foreach($brokenLinks as $brokenLink) {
 				$brokenLink->delete();
 			}
 		}
