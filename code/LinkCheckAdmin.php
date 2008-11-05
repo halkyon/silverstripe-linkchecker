@@ -25,6 +25,8 @@ class LinkCheckAdmin extends LeftAndMain {
 		
 		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin_left.js');
 		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin_right.js');
+		
+		Requirements::css('linkchecker/css/LinkCheckAdmin.css');
 	}
 	
 	/**
@@ -57,11 +59,6 @@ class LinkCheckAdmin extends LeftAndMain {
 		return DataObject::get_by_id('LinkCheckRun', (int) $id);
 	}
 	
-	public function EditForm() {
-		$id = $this->urlParams['ID'];
-		return $this->getEditForm($id);
-	}
-	
 	/**
 	 * Return a {@link Form} instance with a
 	 * a {@link TableListField} for the current
@@ -82,6 +79,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		// just push in any field that happens to be available
 		$runCMSFields = $run->getCMSFields();
 		$runCompFields = new CompositeField();
+		$runCompFields->setID('RunFields');
 		if($runCMSFields) foreach($runCMSFields as $runCMSField) {
 			$runCompFields->push($runCMSField);
 		}
@@ -151,9 +149,8 @@ class LinkCheckAdmin extends LeftAndMain {
 		return FormResponse::respond();
 	}
 	
-	public function delete($request) {
-		$runID = $request->param('ID');
-		$run = DataObject::get_by_id('LinkCheckRun', (int) $runID);
+	public function delete($data, $form) {
+		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
 
 		// Take the run ID before we delete it, we need this to know what tree node to remove!
 		$runID = $run->ID;

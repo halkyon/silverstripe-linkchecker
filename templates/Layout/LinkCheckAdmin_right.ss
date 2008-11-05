@@ -8,9 +8,9 @@
 		<h2><% _t('LINKCHECKHEADER', 'SilverStripe Link Checker') %></h2>
 		
 		<p><% _t('WELCOME1','Welcome to the',50,'Followed by application name') %> $ApplicationName <% _t('WELCOME2','link checker section.',50) %></p>
-		
-		<p><a href="{$BaseHref}LinkCheckTask"><% _t('LINKCHECK','Check links on all pages now') %></a></p>
 	</form>
 <% end_if %>
+
+<p class="linkActions"><a id="LinkCheckButton" href="{$BaseHref}LinkCheckTask"><% _t('LINKCHECK','Check links on all pages now') %></a></p>
 
 <p id="statusMessage" style="visibility:hidden"></p>

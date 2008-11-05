@@ -1,0 +1,18 @@
+
+#RunFields {
+	margin-left: 0;	
+}
+
+#LinkCheckButton {
+	display: block;
+	border: 1px solid #aaa;
+	background: #ddd;
+	padding: 10px;
+	margin: 5px;
+	width: 13em;
+}
+	#LinkCheckButton:hover {
+		background: #999;
+		border: 1px solid #000;
+		color: #fff;
+	}
