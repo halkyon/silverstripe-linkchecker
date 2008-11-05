@@ -81,9 +81,6 @@ class LinkCheckProcessor extends Object {
 		// Each unique link needs to be checked to see what status code is returned
 		for($i = 0; isset($links[$i]) && !connection_aborted(); ++$i) {
 				
-			// Give server a break after checking each link
-			usleep(500000);
-
 			// First, we need to check the URL exists, before we can get the status
 			if($this->urlExists(html_entity_decode($links[$i]))) {
 				// Get the headers for the link
