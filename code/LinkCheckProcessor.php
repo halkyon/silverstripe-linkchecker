@@ -187,15 +187,17 @@ class LinkCheckProcessor extends Object {
 		
 		ini_set('user_agent', 'User-Agent: ' . self::$agent_name);
 		
-		if(($fp = fopen($url, 'r'))) {
+		if(($fp = @fopen($url, 'r'))) {
 			while($data = fread($fp, 1024)) $contents .= $data;
 			
 			fclose($fp);
 		} elseif($url_info = parse_url($url)) {
+			$port = isset($url_info['port']) ? $url_info['port'] : 80;
+			
 			if($url_info['scheme'] == 'https') {
 				$fp = fsockopen('ssl://' . $url_info['host'], 443, $errno, $errstr, 30);
 			} else {
-				$fp = fsockopen($url_info['host'], isset($url_info['port']) ? $url_info['port'] : 80, $errno, $errstr, 30);
+				$fp = fsockopen($url_info['host'], $port, $errno, $errstr, 30);
 			}
 			
 			if(!$fp) {
