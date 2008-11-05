@@ -15,6 +15,10 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
+	static $tree_class = 'LinkCheckRun';
+
+	static $subitem_class = 'BrokenLink';
+	
 	/**
 	 * Include some required files, like javascript,
 	 * for this admin interface when this controller
@@ -23,8 +27,7 @@ class LinkCheckAdmin extends LeftAndMain {
 	function init() {
 		parent::init();
 		
-		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin_left.js');
-		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin_right.js');
+		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin.js');
 		
 		Requirements::css('linkchecker/css/LinkCheckAdmin.css');
 	}
@@ -97,8 +100,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		$fields->push(new HiddenField('ID', '', $run->ID));
 		
 		$actions = new FieldSet(
-			new FormAction('doCreate', 'Create link check run'),
-			new FormAction('delete', 'Delete')
+			new FormAction('save', 'Save')
 		);
 		
 		$form = new Form(
@@ -113,24 +115,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		return $form;
 	}
 	
-	public function doCreate($data, $form) {
-		$task = new LinkCheckTask();
-		$response = $task->process();
-		
-		$id = $response['LinkCheckRunID'];
-		$date = $response['Date'];
-		$class = '';
-		
-		FormResponse::add("var tree = $('sitetree');");
-		FormResponse::add("var newNode = tree.createTreeNode($id, '$date', '$class');");
-		FormResponse::add("newNode.selectTreeNode();");
-		
-		FormResponse::status_message('Created', 'good');
-
-		return FormResponse::respond();
-	}
-	
-	public function doSave($data, $form) {
+	public function save($data, $form) {
 		$validationErrors = false;
 		
 		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
@@ -149,21 +134,28 @@ class LinkCheckAdmin extends LeftAndMain {
 		return FormResponse::respond();
 	}
 	
-	public function delete($data, $form) {
-		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
+	public function deleterun() {
+		$script = '';
+		$ids = split(' *, *', $_REQUEST['csvIDs']);
+		$script = '';
+		
+		if($ids) {
+			foreach($ids as $id) {
+				if(is_numeric($id)) {
+					$record = DataObject::get_by_id($this->stat('tree_class'), $id);
+					$record->delete();
+					$record->destroy();
+					$script .= $this->deleteTreeNodeJS($record);
+				}
+			}
+		}
 
-		// Take the run ID before we delete it, we need this to know what tree node to remove!
-		$runID = $run->ID;
-		
-		$run->delete();
-		
-		FormResponse::add("var node = $('sitetree').getTreeNodeByIdx('$runID');");
-		FormResponse::add("if(node.parentTreeNode)	node.parentTreeNode.removeTreeNode(node);");
-		FormResponse::add("$('Form_EditForm').reloadIfSetTo($runID);");
-		
-		FormResponse::status_message('Deleted','good');
+		$size = sizeof($ids);
+		if($size > 1) $message = $size.' '._t('LinkCheckAdmin.FOLDERSDELETED', 'link check runs deleted.');
+		else $message = $size.' '._t('LinkCheckAdmin.FOLDERDELETED', 'link check run deleted.');
 
-		return FormResponse::respond();
+		$script .= "statusMessage('$message');";
+		echo $script;
 	}
 	
 	function getsitetree() {
