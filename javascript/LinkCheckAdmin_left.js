@@ -30,7 +30,7 @@ SiteTreeNode.prototype.getPageFromServer = function() {
 
 function reloadSiteTree() {
 	new Ajax.Request('admin/linkcheck/getsitetree', {
-		method: get,
+		method: 'get',
 		onSuccess: function(response) {
 			$('sitetree_holder').innerHTML = response.responseText;
 		},
@@ -39,3 +39,10 @@ function reloadSiteTree() {
 	});
 }
 
+appendLoader(function () {
+	if($('sitetree')) {
+		if(typeof($('sitetree').selected) == 'undefined');
+		var selectedNode = $('sitetree').getElementsByTagName('li')[1];
+		selectedNode.onselect();
+	}
+});

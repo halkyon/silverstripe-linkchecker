@@ -1,21 +1,5 @@
 Behaviour.register({
 	'#Form_EditForm' : {
-		initialise : function() {
-      this.openTab = null;
-			this.prepareForm();
-		},
-		
-		/**
-		 * Processing called whenever a page is loaded
-		 * in the right - including the initial one.
-		 */
-		prepareForm : function() {
-			ajaxActionsAtTop('Form_EditForm', 'form_actions', 'right');
-		},
-		
-		/**
-		 * Request a page from the server via ajax.
-		 */
 		getPageFromServer : function(id) {
 			if(id) {
 				this.receivingID = id;
@@ -28,13 +12,14 @@ Behaviour.register({
 				statusMessage("loading...");
 
 				var requestURL = 'admin/linkcheck/show/' + id;
+				
 				new Ajax.Request(requestURL, {
 					asynchronous : true,
 					method : 'post', 
 					postBody : 'ajax=1',
 					onSuccess : this.successfullyReceivedPage.bind(this),
 					onFailure : function(response) { 
-						errorMessage('error loading page',response);
+						errorMessage('error loading page', response);
 					}
 				});
 			} else {
@@ -65,54 +50,7 @@ Behaviour.register({
 		didntReceivePage : function(response) {
 			errorMessage('error loading page', response); 
 			$('sitetree').getTreeNodeByIdx(this.elements.ID.value).removeNodeClass('loading');
-		},
-				
-		/**
-		 * Load a new page into the right-hand form
-		 */
-		loadNewPage : function(formContent) {
-			rightHTML = formContent;
-			rightHTML = rightHTML.replace(/href *= *"#/g, 'href="' + window.location.href.replace(/#.*$/,'') + '#');
-
-			// Prepare iframes for removal, otherwise we get loading bugs
-			var i, allIframes = this.getElementsByTagName('iframe');
-			if(allIframes) for(i=0;i<allIframes.length;i++) {
-				allIframes[i].contentWindow.location.href = 'about:blank';
-				allIframes[i].parentNode.removeChild(allIframes[i]);
-			}
-			
-			this.innerHTML = rightHTML;
-			
-			allIframes = this.getElementsByTagName('iframe');
-			if(allIframes) for(i=0;i<allIframes.length;i++) {
-				try {
-					allIframes[i].contentWindow.location.href = allIframes[i].src;
-				} catch(er) {alert(er.message);}
-			}
-			
-			_TAB_DIVS_ON_PAGE = [];
-
-			try {
-				var tabs = document.getElementsBySelector('#Form_EditForm ul.tabstrip');
-			} catch(er) {/* alert('a: '+ er.message + '\n' + er.line);*/ }
-			try {
-				for(var i=0;i<tabs.length;i++) if(tabs[i].tagName) initTabstrip(tabs[i]);
-			} catch(er) { /*alert('b: '+ er.message + '\n' + er.line); */}
-
-			if((typeof tinyMCE != 'undefined') && tinyMCE.instances) {
-				tinyMCE.instances = [];
-				tinyMCE.isLoaded = false;
-				tinyMCE.onLoad();
-			}
-
-			// if(this.prepareForm) this.prepareForm();
-			Behaviour.apply($('Form_EditForm'));
-			if(this.prepareForm) 
-				this.prepareForm();
-				
-			this.resetElements();
-				
-			window.ontabschanged();
 		}
+
 	}
 });
