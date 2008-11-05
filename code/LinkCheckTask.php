@@ -90,6 +90,12 @@ class LinkCheckTask extends WeeklyTask {
 			
 			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
 			echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
+
+			return array(
+				'Date' => $run->obj('Created')->Nice(),
+				'LinkCheckRunID' => $run->ID,
+				'Class' => ''
+			);
 		}
 	}
 	

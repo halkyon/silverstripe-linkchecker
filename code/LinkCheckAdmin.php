@@ -49,21 +49,17 @@ class LinkCheckAdmin extends LeftAndMain {
 	}
 
 	/**
-	 * Get a {@link LinkCheckRun} record from the DB
-	 * which is specified by the URL parameter "ID".
+	 * Get a {@link LinkCheckRun} record from the DB by ID.
 	 *
 	 * @return mixed LinkCheckRun|false LinkCheckRun or false if nothing found
 	 */
-	public function getLinkCheckRun() {
-		// If there's no ID in the URL, just return without doing anything
-		$runID = (int) Director::urlParam('ID');
-		if(!($runID > 0)) return false;
-		
-		// Get the LinkCheckRun record from the database
-		$run = DataObject::get_by_id('LinkCheckRun', $runID);
-		if(!$run->exists()) return false;
-		
-		return $run;
+	public function getLinkCheckRun($id) {
+		return DataObject::get_by_id('LinkCheckRun', (int) $id);
+	}
+	
+	public function EditForm() {
+		$id = $this->urlParams['ID'];
+		return $this->getEditForm($id);
 	}
 	
 	/**
@@ -77,14 +73,14 @@ class LinkCheckAdmin extends LeftAndMain {
 	 * 
 	 * @return Form
 	 */
-	public function EditForm() {
-		$run = $this->getLinkCheckRun();
+	public function getEditForm($id) {
+		$run = $this->getLinkCheckRun($id);
 		if(!$run) return false;
 		
 		// Get the CMS fields for the LinkCheckRun instance,
 		// put each field into a CompositeField, so we can
 		// just push in any field that happens to be available
-		$runCMSFields = $run->getCMSFields($this);
+		$runCMSFields = $run->getCMSFields();
 		$runCompFields = new CompositeField();
 		if($runCMSFields) foreach($runCMSFields as $runCMSField) {
 			$runCompFields->push($runCMSField);
@@ -93,7 +89,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		$fields = new FieldSet(
 			new TabSet('Root',
 				new Tab(
-					_t('LinkCheckAdmin.CHECKRUN','Link check run'),
+					_t('LinkCheckAdmin.CHECKRUN', 'Link check run'),
 					$runCompFields
 				)
 			)
@@ -101,9 +97,10 @@ class LinkCheckAdmin extends LeftAndMain {
 		
 		$fields->push(new HiddenField('LinkCheckRunID', '', $run->ID));
 		$fields->push(new HiddenField('ID', '', $run->ID));
-
+		
 		$actions = new FieldSet(
-			new FormAction('save', 'Save')
+			new FormAction('doCreate', 'Create link check run'),
+			new FormAction('delete', 'Delete')
 		);
 		
 		$form = new Form(
@@ -118,7 +115,24 @@ class LinkCheckAdmin extends LeftAndMain {
 		return $form;
 	}
 	
-	public function save($data, $form) {
+	public function doCreate($data, $form) {
+		$task = new LinkCheckTask();
+		$response = $task->process();
+		
+		$id = $response['LinkCheckRunID'];
+		$date = $response['Date'];
+		$class = '';
+		
+		FormResponse::add("var tree = $('sitetree');");
+		FormResponse::add("var newNode = tree.createTreeNode($id, '$date', '$class');");
+		FormResponse::add("newNode.selectTreeNode();");
+		
+		FormResponse::status_message('Created', 'good');
+
+		return FormResponse::respond();
+	}
+	
+	public function doSave($data, $form) {
 		$validationErrors = false;
 		
 		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
@@ -132,10 +146,32 @@ class LinkCheckAdmin extends LeftAndMain {
 		$form->saveInto($run);
 		$run->write();
 		
-		echo <<<JS
-			statusMessage("Saved.");
-JS;
+		FormResponse::status_message('Saved', 'good');
+
+		return FormResponse::respond();
 	}
+	
+	public function delete($request) {
+		$runID = $request->param('ID');
+		$run = DataObject::get_by_id('LinkCheckRun', (int) $runID);
+
+		// Take the run ID before we delete it, we need this to know what tree node to remove!
+		$runID = $run->ID;
+		
+		$run->delete();
+		
+		FormResponse::add("var node = $('sitetree').getTreeNodeByIdx('$runID');");
+		FormResponse::add("if(node.parentTreeNode)	node.parentTreeNode.removeTreeNode(node);");
+		FormResponse::add("$('Form_EditForm').reloadIfSetTo($runID);");
+		
+		FormResponse::status_message('Deleted','good');
+
+		return FormResponse::respond();
+	}
+	
+	function getsitetree() {
+		return $this->renderWith('LinkCheckAdmin_sitetree');
+	}	
 	
 }
 
