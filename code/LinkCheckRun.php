@@ -50,19 +50,28 @@ class LinkCheckRun extends DataObject {
 		$fields = new FieldSet();
 		$brokenLinks = $this->BrokenLinks();
 		
-		if(!($brokenLinks && $brokenLinks->Count() > 0)) {
-			
-			// No BrokenLinks are available for this run - show a message
+		if($brokenLinks && $brokenLinks->Count() > 0) {
+			$table = $this->brokenLinksTable();
+			$fields->push($table);
+		} else {
 			$fields->push(
 				new LiteralField(
 					'NoResults',
 					'<p>' . _t('LinkCheckRun.NORESULTS', 'Congratulations, no broken links were found on this site!') . '</p>'
 				)
 			);
-			
-			return $fields;
 		}
 		
+		return $fields;
+	}
+
+	/**
+	 * Return a TableListField for viewing the related
+	 * BrokenLink records through the one-to-many relation.
+	 *
+	 * @return TableListField
+	 */
+	public function brokenLinksTable() {
 		// Get a singleton instance of BrokenLink
 		$SNG_brokenLink = singleton('BrokenLink');
 		
@@ -76,7 +85,8 @@ class LinkCheckRun extends DataObject {
 		);
 		
 		$table->setFieldFormatting(array(
-			'Page.Title' => '<a href=\"admin/show/$PageID\">$PageTitle</a>'
+			'Page.Title' => '<a href=\"admin/show/$PageID\">$PageTitle</a>',
+			'Link' => '<a href=\"$Link\">$Link</a>'
 		));
 		
 		// Set permissions (we don't want to allow adding)
@@ -85,9 +95,7 @@ class LinkCheckRun extends DataObject {
 			'export'
 		));
 		
-		$fields->push($table);
-		
-		return $fields;
+		return $table;
 	}
 	
 	/**
