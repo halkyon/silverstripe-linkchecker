@@ -81,16 +81,33 @@ class LinkCheckAdmin extends LeftAndMain {
 		// put each field into a CompositeField, so we can
 		// just push in any field that happens to be available
 		$runCMSFields = $run->getCMSFields();
+		
 		$runCompFields = new CompositeField();
 		$runCompFields->setID('RunFields');
+		
 		if($runCMSFields) foreach($runCMSFields as $runCMSField) {
 			$runCompFields->push($runCMSField);
 		}
 		
+		$brokenLinkCount = ($run->BrokenLinks()) ? $run->BrokenLinks()->Count() : 0;
+
+		if($brokenLinkCount == 1) {
+			$resultNumField = new LiteralField('ResultNo', '<p>1 broken link was found</p>');
+		} elseif($brokenLinkCount > 0) {
+			$resultNumField = new LiteralField('ResultNo', "<p>$brokenLinkCount broken links were found</p>");
+		} else {
+			$resultNumField = new LiteralField('ResultNo', '<p>No broken links were found</p>');
+		}
+		
+		$runDate = $run->obj('Created')->Nice();
+		
 		$fields = new FieldSet(
 			new TabSet('Root',
 				new Tab(
-					_t('LinkCheckAdmin.CHECKRUN', 'Link check run'),
+					_t('LinkCheckAdmin.CHECKRUN', 'Results'),
+					new HeaderField('Link check run', 2),
+					new LiteralField('ResultText', "<p>Run at {$runDate}</p>"),
+					$resultNumField,
 					$runCompFields
 				)
 			)
