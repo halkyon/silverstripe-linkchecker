@@ -12,7 +12,7 @@
 		<li class="action" id="deletepage"><button><% _t('DELETE','Delete') %></button></li>
 	</ul>
 	<div style="clear:both;"></div>
-	<form class="actionparams" id="addpage_options" style="display: none" action="admin/linkcheck/newrun">
+	<form class="actionparams" id="addpage_options" style="display: none" action="admin/linkcheck/startrun">
 		<div>
 		<input type="hidden" name="ParentID" />
 		<input class="action" type="submit" value="<% _t('GO','Go') %>" />
@@ -27,5 +27,21 @@
 		</div>
 	</form>
 	
-	<% include LinkCheckAdmin_sitetree %>
+	<div id="treepanes">
+		<div id="sitetree_holder">
+			<% if LinkCheckRuns %>
+				<ul id="sitetree" class="tree unformatted">
+				<li id="$ID" class="root"><a><% _t('LINKCHECKRUNS','Link check runs') %></a>
+					<ul>
+					<% control LinkCheckRuns %>
+						<li id="$ID">
+							<a href="{$BaseHref}admin/linkcheck/show/$ID">$Created.Nice</a>
+						</li>
+					<% end_control %>
+					</ul>
+				</li>
+				</ul>
+			<% end_if %>
+		</div>
+	</div>
 </div>

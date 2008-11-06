@@ -77,9 +77,6 @@ class LinkCheckAdmin extends LeftAndMain {
 		$run = $this->getLinkCheckRun($id);
 		if(!$run) return false;
 		
-		// Get the CMS fields for the LinkCheckRun instance,
-		// put each field into a CompositeField, so we can
-		// just push in any field that happens to be available
 		$runCMSFields = $run->getCMSFields();
 		
 		$runCompFields = new CompositeField();
@@ -151,6 +148,10 @@ class LinkCheckAdmin extends LeftAndMain {
 		return FormResponse::respond();
 	}
 	
+	public function startrun() {
+		Debug::show('here');
+	}
+	
 	public function deleterun() {
 		$script = '';
 		$ids = split(' *, *', $_REQUEST['csvIDs']);
@@ -168,16 +169,12 @@ class LinkCheckAdmin extends LeftAndMain {
 		}
 
 		$size = sizeof($ids);
-		if($size > 1) $message = $size.' '._t('LinkCheckAdmin.FOLDERSDELETED', 'link check runs deleted.');
-		else $message = $size.' '._t('LinkCheckAdmin.FOLDERDELETED', 'link check run deleted.');
+		if($size > 1) $message = $size . ' ' . _t('LinkCheckAdmin.FOLDERSDELETED', 'link check runs deleted');
+		else $message = $size . ' ' . _t('LinkCheckAdmin.FOLDERDELETED', 'link check run deleted');
 
 		$script .= "statusMessage('$message');";
 		echo $script;
 	}
-	
-	function getsitetree() {
-		return $this->renderWith('LinkCheckAdmin_sitetree');
-	}	
 	
 }
 

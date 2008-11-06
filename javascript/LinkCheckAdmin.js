@@ -1,7 +1,6 @@
 var _HANDLER_FORMS = {
 	addpage : 'addpage_options',
-	deletepage : 'deletepage_options',
-	sortitems : 'sortitems_options'
+	deletepage : 'deletepage_options'
 };
 
 if(typeof SiteTreeHandlers == 'undefined') SiteTreeHandlers = {};
@@ -34,16 +33,42 @@ SiteTreeNode.prototype.getPageFromServer = function() {
 	if(this.id) $('Form_EditForm').getPageFromServer(this.id);
 };
 
-function reloadSiteTree() {
-	new Ajax.Request('admin/linkcheck/getsitetree', {
-		method: 'get',
-		onSuccess: function(response) {
-			$('sitetree_holder').innerHTML = response.responseText;
-		},
-		onFailure: function(response) {
-		}
-	});
+addRun = Class.create();
+addRun.applyTo('#addpage');
+addRun.prototype = {
+	initialize: function () {
+		Observable.applyTo($(this.id + '_options'));
+		this.getElementsByTagName('button')[0].onclick = returnFalse;
+		$(this.id + '_options').onsubmit = this.form_submit;
+	},
+	
+	onclick : function() {
+		statusMessage('Starting new link check run...');
+		this.form_submit();
+		return false;
+	},
+
+	form_submit : function() {
+		var st = $('sitetree');
+
+		$('addpage_options').elements.ParentID.value = st.getIdxOf(st.firstSelected());		
+		Ajax.SubmitForm('addpage_options', null, {
+			onSuccess : this.onSuccess,
+			onFailure : this.showAddPageError
+		});
+		return false;
+	},
+
+	onSuccess: function(response) {
+		Ajax.Evaluator(response);
+	},
+
+	showAddPageError: function(response) {
+		errorMessage('Error adding folder', response);
+	}
 }
+
+
 
 /**
  * Delete folder action
