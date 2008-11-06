@@ -33,6 +33,16 @@ class LinkCheckProcessor extends Object {
 	protected $url;
 	
 	/**
+	 * Supress echo messages if set to false. This is particularly
+	 * useful for using this class while performing an ajax request,
+	 * as the messages could be detrimental to the operation of the
+	 * request.
+	 * 
+	 * @var boolean
+	 */
+	public $showMessages = true;
+	
+	/**
 	 * Start a new instance of this class.
 	 * @param string $url The URL to parse for links
 	 */
@@ -58,22 +68,28 @@ class LinkCheckProcessor extends Object {
 		
 		$html = $this->fetchHTML($this->url);
 
-		if(!$html) echo "$this->url doesn't appear to exist.\r\n";
+		if(!$html) {
+			if($this->showMessages) echo "$this->url doesn't appear to exist.\r\n";
+		}
 
 		$links = $this->extractLinks($html, $this->url);
 		
 		// HTML stored in memory is no longer required, discard it
 		unset($html);
 	
-		echo "Getting HTML from {$this->url}\r\n";
+		if($this->showMessages) echo "Getting HTML from {$this->url}\r\n";
 
-		if(empty($links)) echo "$this->url doesn't appear to have any links.\r\n";
+		if(empty($links)) {
+			if($this->showMessages) {
+				echo "$this->url doesn't appear to have any links.\r\n";
+			}
+		}
 		
 		// We only need unique links, so take any duplicates and discard them
 		$links = array_values(array_unique($links));
 		$linkCount = count($links);
 		
-		echo "Found {$linkCount} links on {$this->url}\r\n";
+		if($this->showMessages) echo "Found {$linkCount} links on {$this->url}\r\n";
 
 		flush();
 		ob_flush();

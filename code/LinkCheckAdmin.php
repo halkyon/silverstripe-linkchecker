@@ -32,6 +32,20 @@ class LinkCheckAdmin extends LeftAndMain {
 		Requirements::css('linkchecker/css/LinkCheckAdmin.css');
 	}
 	
+	public function show($params) {
+		if($params['ID']) $this->setCurrentPageID($params['ID']);
+		if(isset($params['OtherID']))
+			Session::set('currentMember', $params['OtherID']);
+
+		if(Director::is_ajax()) {
+			SSViewer::setOption('rewriteHashlinks', false);
+			return $this->EditForm() ? $this->EditForm()->formHtmlContent() : false;
+
+		} else {
+			return array();
+		}
+	}	
+	
 	/**
 	 * Return a link used to access this LinkCheckAdmin
 	 * interface in the CMS.
@@ -39,8 +53,8 @@ class LinkCheckAdmin extends LeftAndMain {
 	 * @param string $action The action to call (defaults to index)
 	 * @return string
 	 */
-	public function Link() {
-		return 'admin/linkcheck';
+	public function Link($action = null) {
+		return "admin/linkcheck/$action";
 	}
 	
 	/**
@@ -149,7 +163,14 @@ class LinkCheckAdmin extends LeftAndMain {
 	}
 	
 	public function startrun() {
-		Debug::show('here');
+		$task = new LinkCheckTask();
+		$result = $task->process();
+		$script = '';
+		
+		if(!empty($result['LinkCheckRunID'])) {
+			$run = DataObject::get_by_id('LinkCheckRun', (int) $result['LinkCheckRunID']);
+			if($run) echo $this->addTreeNodeJS($run, true);
+		}
 	}
 	
 	public function deleterun() {
@@ -174,6 +195,32 @@ class LinkCheckAdmin extends LeftAndMain {
 
 		$script .= "statusMessage('$message');";
 		echo $script;
+	}
+	
+	public function SiteTreeAsUL() {
+		$obj = singleton('LinkCheckRun');
+		$obj->setMarkingFilter('ClassName', 'LinkCheckRun');
+		$obj->markPartialTree();
+
+		if($p = $this->currentPage()) $obj->markToExpose($p);
+
+		// getChildrenAsUL is a flexible and complex way of traversing the tree
+		$siteTreeUL = $obj->getChildrenAsUL(
+			'',
+			'"<li id=\"$child->ID\" class=\"$child->class" . $child->markingClasses() .  ($extraArg->isCurrentPage($child) ? " current" : "") . "\">" . ' .
+			'"<a href=\"" . Director::link(substr($extraArg->Link(),0,-1), "show", $child->ID) . "\" class=\"" . ($child->hasChildren() ? " contents" : "") . "\" >" . $child->TreeTitle() . "</a>"',
+			$this,
+			true
+		);
+		
+		// Wrap the root if needs be.
+		$rootLink = $this->Link();
+		if(!isset($rootID)) {
+			$siteTree = "<ul id=\"sitetree\" class=\"tree unformatted\"><li id=\"record-root\" class=\"Root\"><a href=\"$rootLink\"><strong>Run dates</strong></a>";
+			$siteTree .= $siteTreeUL . "</li></ul>";
+		}
+
+		return $siteTree;
 	}
 	
 }

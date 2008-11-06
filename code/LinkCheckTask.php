@@ -47,6 +47,7 @@ class LinkCheckTask extends WeeklyTask {
 				}
 				
 				$processor = new LinkCheckProcessor($page->AbsoluteLink());
+				if(Director::is_ajax()) $processor->showMessages = false;
 				$results = $processor->run();
 				
 				if($results) {
@@ -81,21 +82,23 @@ class LinkCheckTask extends WeeklyTask {
 			// Count the number of BrokenLink records created for this run
 			$runBrokenLinks = $run->BrokenLinks()->Count() ? $run->BrokenLinks()->Count() : 0;
 			
-			echo "SilverStripe Link Checker results\n";
-			echo "---------------------------------\n\n";
-			
-			echo "$goodLinks links were OK.\n";
-			echo "$checkLinks links were redirected.\n";
-			echo "$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.\n\n";
-			
-			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
-			echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
-
-			return array(
-				'Date' => $run->obj('Created')->Nice(),
-				'LinkCheckRunID' => $run->ID,
-				'Class' => ''
-			);
+			if(Director::is_ajax()) {
+				return array(
+					'Date' => $run->obj('Created')->Nice(),
+					'LinkCheckRunID' => $run->ID,
+					'Class' => ''
+				);
+			} else {
+				echo "SilverStripe Link Checker results\n";
+				echo "---------------------------------\n\n";
+				
+				echo "$goodLinks links were OK.\n";
+				echo "$checkLinks links were redirected.\n";
+				echo "$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.\n\n";
+				
+				echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
+				echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
+			}
 		}
 	}
 	
