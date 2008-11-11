@@ -1,3 +1,13 @@
+#treepanes {
+	position: relative;	
+}
+
+#startRunLoading {
+	display: none;
+	position: absolute;
+	top: 3px;
+	right: 5px;
+}
 
 #RunFields {
 	margin-left: 0;	

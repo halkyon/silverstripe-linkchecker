@@ -18,6 +18,7 @@ addRun.prototype = {
 	
 	onclick : function() {
 		statusMessage('Starting new link check run...');
+		$('startRunLoading').style.display = 'inline';
 		this.form_submit();
 		return false;
 	},
@@ -34,11 +35,12 @@ addRun.prototype = {
 	},
 
 	onSuccess: function(response) {
+		Element.hide('startRunLoading');
 		Ajax.Evaluator(response);
 	},
 
 	showAddPageError: function(response) {
-		errorMessage('Error adding folder', response);
+		errorMessage('Error starting link check', response);
 	}
 }
 

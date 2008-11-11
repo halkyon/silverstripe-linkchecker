@@ -7,6 +7,10 @@
 <h2><% _t('LINKCHECK','Link check runs') %></h2>
 
 <div id="treepanes" style="overflow-y: auto;">
+	<span id="startRunLoading">
+		<img src="cms/images/network-save.gif">
+	</span>
+
 	<ul id="TreeActions">
 		<li class="action" id="addpage"><button><% _t('START','Start link checker') %></button></li>
 		<li class="action" id="deletepage"><button><% _t('DELETE','Delete') %></button></li>
@@ -36,4 +40,5 @@
 		<% end_control %>
 		</li>
 	</ul>
+	
 </div>
