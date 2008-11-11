@@ -40,6 +40,18 @@ class LinkCheckRun extends DataObject {
 	);
 	
 	/**
+	 * Check there are no broken links for this link check
+	 * run or not.
+	 *
+	 * @return boolean
+	 */
+	public function NoBrokenLinks() {
+		$brokenLinks = $this->BrokenLinks();
+		if($brokenLinks && ($brokenLinks->Count() > 0)) return false;
+		else return true;
+	}
+	
+	/**
 	 * This field is used for the site tree in the
 	 * CMS.
 	 *

@@ -1,3 +1,11 @@
+ul.tree a {
+	background-image: url(../images/brokenlink-file.gif);
+}
+
+ul.tree a.nobroken {
+	background-image: url(../images/page-file.gif) !important;	
+}
+
 #treepanes {
 	position: relative;	
 }

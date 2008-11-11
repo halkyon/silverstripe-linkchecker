@@ -1,14 +1,8 @@
-<style>
-	ul.tree a {
-		background-image: url(cms/images/treeicons/reports-file.png);
-	}
-</style>
-
 <h2><% _t('LINKCHECK','Link check runs') %></h2>
 
 <div id="treepanes" style="overflow-y: auto;">
 	<span id="startRunLoading">
-		<img src="cms/images/network-save.gif">
+		<img src="linkchecker/images/network-save.gif">
 	</span>
 
 	<ul id="TreeActions">
@@ -35,7 +29,7 @@
 		<li id="record-0" class="Root"><a href="admin/linkcheck/show/0"><strong>Run dates</strong></a>
 		<% control LinkCheckRuns %>
 			<li id="record-$ID" class="$class">
-				<a href="admin/linkcheck/show/$ID">$TreeTitle</a>
+				<a href="admin/linkcheck/show/$ID"<% if NoBrokenLinks %> class="nobroken"<% end_if %>>$TreeTitle</a>
 			</li>
 		<% end_control %>
 		</li>
