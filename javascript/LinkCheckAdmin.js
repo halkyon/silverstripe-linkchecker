@@ -35,7 +35,7 @@ addRun.prototype = {
 	},
 
 	onSuccess: function(response) {
-		Element.hide('startRunLoading');
+		$('startRunLoading').style.display = 'none';
 		Ajax.Evaluator(response);
 	},
 
