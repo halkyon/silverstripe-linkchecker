@@ -113,7 +113,6 @@ class LinkCheckRun extends DataObject {
 		
 		// Set permissions (we don't want to allow adding)
 		$table->setPermissions(array(
-			'delete',
 			'export'
 		));
 		
