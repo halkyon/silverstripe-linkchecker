@@ -27,5 +27,13 @@
 		</div>
 	</form>
 	
-	$SiteTreeAsUL
+	<ul id="sitetree" class="tree unformatted">
+		<li id="record-0" class="Root"><a href="admin/linkcheck/show/0"><strong>Run dates</strong></a>
+		<% control LinkCheckRuns %>
+			<li id="record-$ID" class="$class">
+				<a href="admin/linkcheck/show/$ID">$TreeTitle</a>
+			</li>
+		<% end_control %>
+		</li>
+	</ul>
 </div>

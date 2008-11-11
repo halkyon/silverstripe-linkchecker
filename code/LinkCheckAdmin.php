@@ -17,13 +17,6 @@ class LinkCheckAdmin extends LeftAndMain {
 	
 	static $tree_class = 'LinkCheckRun';
 
-	static $subitem_class = 'BrokenLink';
-	
-	/**
-	 * Include some required files, like javascript,
-	 * for this admin interface when this controller
-	 * is created.
-	 */
 	function init() {
 		parent::init();
 		
@@ -46,23 +39,10 @@ class LinkCheckAdmin extends LeftAndMain {
 		}
 	}	
 	
-	/**
-	 * Return a link used to access this LinkCheckAdmin
-	 * interface in the CMS.
-	 *
-	 * @param string $action The action to call (defaults to index)
-	 * @return string
-	 */
 	public function Link($action = null) {
 		return "admin/linkcheck/$action";
 	}
 	
-	/**
-	 * Return all instances of LinkCheckRun from
-	 * the database, sorted by the creation date first.
-	 *
-	 * @return DataObjectSet
-	 */
 	public function LinkCheckRuns() {
 		return DataObject::get('LinkCheckRun', '', 'Created DESC');
 	}
@@ -195,26 +175,6 @@ class LinkCheckAdmin extends LeftAndMain {
 
 		$script .= "statusMessage('$message');";
 		echo $script;
-	}
-	
-	public function SiteTreeAsUL() {
-		$siteTree = '';
-		$runs = DataObject::get('LinkCheckRun');
-		
-		if($runs) foreach($runs as $ID => $data) {
-			$siteTree .= "<li id=\"record-" . $data->ID . "\" class=\"" . $data->class . " " .
-			($data->Locked ? " nodelete" : "") . "\" >" . 
-			"<a href=\"" . Director::link('linkcheck', 'show', $data->ID) . "\" >" . $data->TreeTitle() . "</a>";
-		}
-		
-		$siteTree = "<ul id=\"sitetree\" class=\"tree unformatted\">" .
-						"<li id=\"record-0\" class=\"Root nodelete\">" .
-							"<a href=\"admin/linkcheck/show/0\" ><strong>Run dates</strong></a>"
-							. $siteTree .
-						"</li>" .
-					"</ul>";
-							
-		return $siteTree;
 	}
 	
 }

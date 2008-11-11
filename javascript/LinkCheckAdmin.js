@@ -137,11 +137,7 @@ deleteRun = {
 	}
 }
 
-/** 
- * Initialisation function to set everything up
- */
 appendLoader(function () {
-	// Set up delete page
 	Observable.applyTo($('deletepage_options'));
 	if($('deletepage')) {
 		$('deletepage').onclick = deleteRun.button_onclick;

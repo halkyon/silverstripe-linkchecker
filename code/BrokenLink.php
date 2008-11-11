@@ -25,7 +25,7 @@ class BrokenLink extends DataObject {
 		'Link' => 'Varchar(255)',
 		'Code' => 'Int',
 		'Status' => 'Varchar(20)',
-		'PageTitle' => 'Varchar(100)'
+		'PageTitle' => 'Varchar(100)'	// Redundancy for TableListField (same as Page->Title)
 	);
 	
 	/**
@@ -51,8 +51,8 @@ class BrokenLink extends DataObject {
 	public function tableOverviewFields() {
 		$fields = array(
 			'Page.Title' => 'Page',
-			'Code' => 'Code',
 			'Link' => 'Link',
+			'Code' => 'Code',
 			'Status' => 'Status'
 		);
 		
