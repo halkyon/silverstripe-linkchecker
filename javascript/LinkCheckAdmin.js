@@ -1,37 +1,11 @@
 var _HANDLER_FORMS = {
-	addpage : 'addpage_options',
-	deletepage : 'deletepage_options'
+	addRun : 'addpage_options',
+	deleteRun : 'deletepage_options'
 };
 
 if(typeof SiteTreeHandlers == 'undefined') SiteTreeHandlers = {};
-
-SiteTree.prototype = {
-	castAsTreeNode: function(li) {
-		behaveAs(li, SiteTreeNode, this.options);
-	},
-	getIdxOf : function(treeNode) {
-		if(treeNode && treeNode.id) return treeNode.id;
-	},
-	getTreeNodeByIdx : function(idx) {
-		if(!idx) idx = "0";
-		return document.getElementById(idx);
-	},
-	initialise: function() {
-		this.observeMethod('SelectionChanged', this.changeCurrentTo);	
-	}
-};
-
-SiteTreeNode.prototype.onselect = function() {
-	$('sitetree').changeCurrentTo(this);
-	if($('sitetree').notify('SelectionChanged', this)) {
-		this.getPageFromServer();
-	}
-	return false; 
-};
-
-SiteTreeNode.prototype.getPageFromServer = function() {
-	if(this.id) $('Form_EditForm').getPageFromServer(this.id);
-};
+SiteTreeHandlers.loadPage_url = 'admin/linkcheck/getitem';
+SiteTreeHandlers.controller_url = 'admin/linkcheck';
 
 addRun = Class.create();
 addRun.applyTo('#addpage');
@@ -67,8 +41,6 @@ addRun.prototype = {
 		errorMessage('Error adding folder', response);
 	}
 }
-
-
 
 /**
  * Delete folder action
@@ -177,63 +149,6 @@ appendLoader(function () {
 	}
 	
 	new CheckBoxRange($('Form_EditForm'), 'Files[]');
-});
-
-Behaviour.register({
-	'#Form_EditForm' : {
-		getPageFromServer : function(id) {
-			if(id) {
-				this.receivingID = id;
-
-				// Treenode might not exist if that part of the tree is closed
-				var treeNode = $('sitetree').getTreeNodeByIdx(id);
-				
-				if(treeNode) treeNode.addNodeClass('loading');
-				
-				statusMessage("loading...");
-
-				var requestURL = 'admin/linkcheck/show/' + id;
-				
-				new Ajax.Request(requestURL, {
-					asynchronous : true,
-					method : 'post', 
-					postBody : 'ajax=1',
-					onSuccess : this.successfullyReceivedPage.bind(this),
-					onFailure : function(response) { 
-						errorMessage('error loading page', response);
-					}
-				});
-			} else {
-				throw("getPageFromServer: Bad ID: " + id);
-			}
-		},
-		
-		successfullyReceivedPage : function(response) {
-			this.loadNewPage(response.responseText);
-			
-			// Treenode might not exist if that part of the tree is closed
-			var treeNode = $('sitetree').getTreeNodeByIdx(this.receivingID);
-			if(treeNode) {
-				$('sitetree').changeCurrentTo(treeNode);
-				treeNode.removeNodeClass('loading');
-			}
-	
-			statusMessage('');
-      
-	      onload_init_tabstrip();
-            
-			if(this.openTab ) {
-				openTab( this.openTab );
-				this.openTab = null;    
-			}
-		},
-		
-		didntReceivePage : function(response) {
-			errorMessage('error loading page', response); 
-			$('sitetree').getTreeNodeByIdx(this.elements.ID.value).removeNodeClass('loading');
-		}
-
-	}
 });
 
 var CheckBoxRange = Class.create();
