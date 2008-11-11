@@ -198,28 +198,22 @@ class LinkCheckAdmin extends LeftAndMain {
 	}
 	
 	public function SiteTreeAsUL() {
-		$obj = singleton('LinkCheckRun');
-		$obj->setMarkingFilter('ClassName', 'LinkCheckRun');
-		$obj->markPartialTree();
-
-		if($p = $this->currentPage()) $obj->markToExpose($p);
-
-		// getChildrenAsUL is a flexible and complex way of traversing the tree
-		$siteTreeUL = $obj->getChildrenAsUL(
-			'',
-			'"<li id=\"$child->ID\" class=\"$child->class" . $child->markingClasses() .  ($extraArg->isCurrentPage($child) ? " current" : "") . "\">" . ' .
-			'"<a href=\"" . Director::link(substr($extraArg->Link(),0,-1), "show", $child->ID) . "\" class=\"" . ($child->hasChildren() ? " contents" : "") . "\" >" . $child->TreeTitle() . "</a>"',
-			$this,
-			true
-		);
+		$siteTree = '';
+		$runs = DataObject::get('LinkCheckRun');
 		
-		// Wrap the root if needs be.
-		$rootLink = $this->Link();
-		if(!isset($rootID)) {
-			$siteTree = "<ul id=\"sitetree\" class=\"tree unformatted\"><li id=\"record-root\" class=\"Root\"><a href=\"$rootLink\"><strong>Run dates</strong></a>";
-			$siteTree .= $siteTreeUL . "</li></ul>";
+		if($runs) foreach($runs as $ID => $data) {
+			$siteTree .= "<li id=\"record-" . $data->ID . "\" class=\"" . $data->class . " " .
+			($data->Locked ? " nodelete" : "") . "\" >" . 
+			"<a href=\"" . Director::link('linkcheck', 'show', $data->ID) . "\" >" . $data->TreeTitle() . "</a>";
 		}
-
+		
+		$siteTree = "<ul id=\"sitetree\" class=\"tree unformatted\">" .
+						"<li id=\"record-0\" class=\"Root nodelete\">" .
+							"<a href=\"admin/linkcheck/show/0\" ><strong>Run dates</strong></a>"
+							. $siteTree .
+						"</li>" .
+					"</ul>";
+							
 		return $siteTree;
 	}
 	

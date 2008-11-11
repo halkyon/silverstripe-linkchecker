@@ -25,7 +25,6 @@ class LinkCheckRun extends DataObject {
 	 * @var array
 	 */
 	static $has_one = array(
-		'Parent' => 'LinkCheckRun',
 		'Member' => 'Member'
 	);
 
@@ -40,10 +39,6 @@ class LinkCheckRun extends DataObject {
 		'BrokenLinks' => 'BrokenLink'
 	);
 	
-	static $extensions = array(
-		'Hierarchy',
-	);
-	
 	/**
 	 * This field is used for the site tree in the
 	 * CMS.
@@ -52,28 +47,6 @@ class LinkCheckRun extends DataObject {
 	 */
 	public function TreeTitle() {
 		return $this->obj('Created')->Nice();
-	}
-	
-	/**
-	 * Returns true if this folder has children
-	 */
-	public function hasChildren() {
-		return $this->myChildren() && $this->myChildren()->Count() > 0;	
-	}
-
-	public function myChildren() {
-		// Ugly, but functional.
-		$ancestors = ClassInfo::ancestry($this->class);
-		foreach($ancestors as $i => $a) {
-			if(isset($baseClass) && $baseClass === -1) {
-				$baseClass = $a;
-				break;
-			}
-			if($a == "DataObject") $baseClass = -1;
-		}
-		
-		$g = DataObject::get($baseClass, "ParentID = " . $this->ID);
-		return $g;
 	}
 	
 	/**
