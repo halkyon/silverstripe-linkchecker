@@ -244,9 +244,9 @@ class LinkCheckProcessor extends Object {
 	 * @param string $url
 	 * @return boolean
 	 */
-	protected function urlExists($url) {
+	public function urlExists($url) {
 		$headers = @get_headers($url);
-		return is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/', $headers[0]) : false;
+		return is_array($headers) ? true : false;
 	}
 	
 	/**
@@ -255,7 +255,7 @@ class LinkCheckProcessor extends Object {
 	 * @param string $url The url to get the headers of
 	 * @return mixed string headers or false
 	 */
-	protected function fetchHeaders($url) {
+	public function fetchHeaders($url) {
 		$headers = '';
 
 		if($url_info = parse_url($url)) {
@@ -300,17 +300,17 @@ class LinkCheckProcessor extends Object {
 	 * @param array $headers List of headers
 	 * @return array
 	 */
-	protected function extractStatusCode($headers) {
-		for($i = 0; isset($headers[$i]); $i++) {
+	public function extractStatusCode($headers) {
+		foreach($headers as $header) {
 			// Checks if the header is the status header
-			if(preg_match("/HTTP\/[0-9A-Za-z +]/i", $headers[$i])) {
+			if(preg_match("/HTTP\/[0-9A-Za-z +]/i", $header)) {
 				// If it is save the status
-				$status = preg_match("/http\/[0-9]\.[0-9] (.*) (.*)/i", $headers[$i], $matches);
+				$status = preg_match("/HTTP\/[0-9]\.[0-9] ([^ ]*) (.*)/i", $header, $matches);
 				
 				return array($matches[1], $matches[2]);
 			}
 		}
-	}	
+	}
 	
 }
 
