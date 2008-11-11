@@ -42,12 +42,11 @@ addRun.prototype = {
 	}
 }
 
-/**
- * Delete folder action
- */
 deleteRun = {
 	button_onclick : function() {
 		if(treeactions.toggleSelection(this)) {
+			$('deletepage_options').style.display = 'block';
+ 
 			deleteRun.o1 = $('sitetree').observeMethod('SelectionChanged', deleteRun.treeSelectionChanged);
 			deleteRun.o2 = $('deletepage_options').observeMethod('Close', deleteRun.popupClosed);
 			
@@ -62,6 +61,8 @@ deleteRun = {
 				sel.removeNodeClass('current');
 				sel.addNodeClass('selected');		
 			}
+		} else {
+			$('deletepage_options').style.display = 'none';
 		}
 		return false;
 	},
@@ -102,32 +103,32 @@ deleteRun = {
 	form_submit : function() {
 		var csvIDs = "";
 		for(var idx in deleteRun.selectedNodes) {
-			var selectedNode = $('sitetree').getTreeNodeByIdx(idx);
-			var link = selectedNode.getElementsByTagName('a')[0];
-			
-			if(deleteRun.selectedNodes[idx] && ( !Element.hasClassName( link, 'contents' ) || confirm( "'" + link.firstChild.nodeValue + "' contains files. Would you like to delete the files and folder?" ) ) ) 
-				csvIDs += (csvIDs ? "," : "") + idx;
+			if(deleteRun.selectedNodes[idx]) csvIDs += (csvIDs ? "," : "") + idx;
 		}
-		
 		if(csvIDs) {
-			$('deletepage_options').elements.csvIDs.value = csvIDs;
-			
-			statusMessage('deleting pages');
-
-			Ajax.SubmitForm('deletepage_options', null, {
-				onSuccess : deleteRun.submit_success,
-				onFailure : function(response) {
-					errorMessage('Error deleting pages', response);
-				}
-			});
-
-			$('deletepage').getElementsByTagName('button')[0].onclick();
-			
+			if(confirm("Do you really want to delete these links?")) {
+				$('deletepage_options').elements.csvIDs.value = csvIDs;
+ 
+				Ajax.SubmitForm('deletepage_options', null, {
+					onSuccess : function(response) {
+						Ajax.Evaluator(response);
+						var sel;
+						if((sel = $('sitetree').firstSelected()) && sel.parentNode) sel.addNodeClass('current');
+						else $('Form_EditForm').innerHTML = "";
+						treeactions.closeSelection($('deletepage'));
+					},
+					onFailure : function(response) {
+						errorMessage('Error deleting items', response);
+					}
+				});
+ 
+				$('deletepage').getElementsByTagName('button')[0].onclick();
+			}
 		} else {
-			alert("Please select at least 1 page.");
+			alert("Please select at least one item.");
 		}
-
 		return false;
+
 	},
 	
 	submit_success: function(response) {
