@@ -137,11 +137,11 @@ class LinkCheckProcessor extends Object {
 	protected function extractLinks($html, $url) {
 		$links = array();
 		$url_info = parse_url($url);
-	
+		
 		preg_match_all("/<a[\s]+[^>]*?href[\s]?=[\s\"\']+(.*?)[\"\']+.*?>/", $html, $matches);
-	
+		
 		if(empty($url_info['path'])) $url_info['path'] = '/';
-	
+		
 		// If there is a file at the end of the URL, then get it
 		if($url_info['path']{strlen($url_info['path']) - 1} != '/') {
 			$url_info['path'] = substr( $url_info['path'], 0, strrpos($url_info['path'], '/') + 1);
@@ -149,7 +149,7 @@ class LinkCheckProcessor extends Object {
 		
 		if(substr($url_info['host'], 0, 4) == 'www.') $host = substr($url_info['host'], 4) . '/';
 		else $host = $url_info['host'];
-
+		
 		for($i = 0; isset($matches[1][$i]); $i++) {
 			if($matches[1][$i]{0} != '#' && !strpos($matches[1][$i], '@')) { // stop #top sort of links and remove emails
 				if(strpos($matches[1][$i], '#')) $matches[1][$i] = substr($matches[1][$i], 0, strpos($matches[1][$i], '#'));
@@ -177,15 +177,14 @@ class LinkCheckProcessor extends Object {
 							array_pop($cur_dir);
 						}
 					}
-					
-            } elseif(substr($matches[1][$i] , 0, 7) != 'http://' && substr($matches[1][$i], 0, 8) != 'https://') { // do any links left without root
+				} elseif(substr($matches[1][$i] , 0, 7) != 'http://' && substr($matches[1][$i], 0, 8) != 'https://') { // do any links left without root
 					$links[] = $url_info['scheme'] . '://' . $url_info['host'] . $url_info['path'] . $matches[1][$i];
-            } else {
+				} else {
 					$links[] = $matches[1][$i];
 				}	
 			}
 		}
-	
+		
 		return $links;
 	}
 	
