@@ -1,16 +1,16 @@
+if(typeof SiteTreeHandlers == 'undefined') SiteTreeHandlers = {};
+SiteTreeHandlers.loadPage_url = 'admin/linkcheck/getitem';
+SiteTreeHandlers.controller_url = 'admin/linkcheck';
+
 var _HANDLER_FORMS = {
 	addRun : 'addpage_options',
 	deleteRun : 'deletepage_options'
 };
 
-if(typeof SiteTreeHandlers == 'undefined') SiteTreeHandlers = {};
-SiteTreeHandlers.loadPage_url = 'admin/linkcheck/getitem';
-SiteTreeHandlers.controller_url = 'admin/linkcheck';
-
 addRun = Class.create();
 addRun.applyTo('#addpage');
 addRun.prototype = {
-	initialize: function () {
+	initialize : function () {
 		Observable.applyTo($(this.id + '_options'));
 		this.getElementsByTagName('button')[0].onclick = returnFalse;
 		$(this.id + '_options').onsubmit = this.form_submit;
@@ -34,12 +34,12 @@ addRun.prototype = {
 		return false;
 	},
 
-	onSuccess: function(response) {
+	onSuccess : function(response) {
 		$('startRunLoading').style.display = 'none';
 		Ajax.Evaluator(response);
 	},
 
-	showAddPageError: function(response) {
+	showAddPageError : function(response) {
 		errorMessage('Error starting link check', response);
 	}
 }
