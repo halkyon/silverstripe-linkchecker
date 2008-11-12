@@ -24,7 +24,7 @@ class BrokenLink extends DataObject {
 	static $db = array(
 		'Link' => 'Varchar(255)',
 		'Code' => 'Int',
-		'Status' => 'Varchar(20)',
+		'Status' => 'Varchar(30)',
 		'PageTitle' => 'Varchar(100)'	// Redundancy for TableListField (same as Page->Title)
 	);
 	
