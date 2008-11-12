@@ -111,7 +111,7 @@ class LinkCheckRun extends DataObject {
 		);
 		
 		$table->setFieldFormatting(array(
-			'Page.Title' => '<a href=\"admin/show/$PageID\">$PageTitle</a>',
+			'PageTitle' => '<a href=\"admin/show/$PageID\">$PageTitle</a>',
 			'Link' => '<a href=\"$Link\">$Link</a>'
 		));
 		
