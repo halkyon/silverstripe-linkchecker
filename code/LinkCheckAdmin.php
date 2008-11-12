@@ -156,6 +156,14 @@ class LinkCheckAdmin extends LeftAndMain {
 		$result = $task->process();
 		$script = '';
 		
+		if(!$result) {
+			FormResponse::status_message(
+				'There is already a link check running at the moment. Please wait for it to complete before starting a new one.',
+				'bad'
+			);
+			return FormResponse::respond();
+		}
+		
 		if(!empty($result['LinkCheckRunID'])) {
 			$run = DataObject::get_by_id('LinkCheckRun', (int) $result['LinkCheckRunID']);
 			if($run) echo $this->addTreeNodeJS($run, true);
