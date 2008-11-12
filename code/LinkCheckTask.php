@@ -25,11 +25,18 @@ class LinkCheckTask extends WeeklyTask {
 	public static $exempt_classes = array(
 		'ErrorPage'
 	);
-		
+	
 	/**
 	 * Run the LinkCheckTask.
 	 */
 	public function process() {
+		
+		// If there is already a LinkCheckRun that exists and is not complete,
+		// don't allow a new run as it could run the server to the ground!
+		if(DataObject::get_one('LinkCheckRun', 'IsComplete = 0')) {
+			return 'There is already a link check running at the moment. Please wait for it to complete before starting a new one.';
+		}
+		
 		set_time_limit(0);
 		ini_set('max_execution_time', 0);
 		

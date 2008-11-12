@@ -6,7 +6,5 @@
 
 <p>Checking all pages on your site for broken links may take a long time.  The more pages with links you have, the longer it will take.</p>
 
-<p>It is possible to close the browser window and come back later, the script will still run if you do so.</p>
-
-<p>Once all pages have been checked, a report will appear with broken links found, with a link to the page to fix it.  That
+<p>Once all pages have been checked, a report will appear with broken links found, with a link to the page to fix it.<br>That
 	report can be found on the left hand panel, the latest link check run will appear at the top of the list.</p>
