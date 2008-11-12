@@ -155,7 +155,6 @@ class LinkCheckAdmin extends LeftAndMain {
 	public function deleterun() {
 		$script = '';
 		$ids = split(' *, *', $_REQUEST['csvIDs']);
-		$script = '';
 		
 		if($ids) {
 			foreach($ids as $id) {
