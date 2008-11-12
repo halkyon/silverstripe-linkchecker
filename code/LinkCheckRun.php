@@ -120,7 +120,8 @@ class LinkCheckRun extends DataObject {
 			'export'
 		));
 		
-		$table->setPageSize(0);
+		$table->setPageSize(20);
+		$table->setShowPagination(true);
 		
 		return $table;
 	}
