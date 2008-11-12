@@ -161,7 +161,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		if($ids) {
 			foreach($ids as $id) {
 				if(is_numeric($id)) {
-					$record = DataObject::get_by_id($this->stat('tree_class'), $id);
+					$record = DataObject::get_by_id('LinkCheckRun', $id);
 					$record->delete();
 					$record->destroy();
 					$script .= $this->deleteTreeNodeJS($record);
