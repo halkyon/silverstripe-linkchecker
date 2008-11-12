@@ -23,7 +23,9 @@ class LinkCheckTask extends WeeklyTask {
 	 * @var array
 	 */
 	public static $exempt_classes = array(
-		'ErrorPage'
+		'ErrorPage',
+		'ForumPage',
+		'RedirectorPage'
 	);
 	
 	/**
