@@ -15,9 +15,9 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
-	static $tree_class = 'LinkCheckRun';
+	public static $tree_class = 'LinkCheckRun';
 
-	function init() {
+	public function init() {
 		parent::init();
 		
 		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin.js');
@@ -32,16 +32,15 @@ class LinkCheckAdmin extends LeftAndMain {
 		if(Director::is_ajax()) {
 			SSViewer::setOption('rewriteHashlinks', false);
 			return $this->EditForm() ? $this->EditForm()->formHtmlContent() : false;
-
-		} else {
-			return array();
 		}
-	}	
+		
+		return array();
+	}
 	
 	public function Link($action = null) {
 		return "admin/linkcheck/$action";
 	}
-	
+		
 	public function LinkCheckRuns() {
 		return DataObject::get('LinkCheckRun', '', 'Created DESC');
 	}

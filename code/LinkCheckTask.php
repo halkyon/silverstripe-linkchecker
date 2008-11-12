@@ -30,6 +30,9 @@ class LinkCheckTask extends WeeklyTask {
 	 * Run the LinkCheckTask.
 	 */
 	public function process() {
+		set_time_limit(0);
+		ini_set('max_execution_time', 0);
+		
 		$goodLinks = 0;   // 200-299 HTTP status codes
 		$checkLinks = 0;  // 300-399 HTTP status codes
 		$brokenLinks = 0; // 400-599 HTTP status codes
