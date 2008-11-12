@@ -62,7 +62,7 @@ class BrokenLink extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
-		$this->PageTitle = $this->Page()->Title;
+		$this->PageTitle = $this->Page() ? $this->Page()->Title : '';
 	}
 	
 }
