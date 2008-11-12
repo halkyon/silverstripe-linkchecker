@@ -74,6 +74,10 @@ class LinkCheckTask extends WeeklyTask {
 			}
 		}
 		
+		// Mark as done - this is to indicate that the task has completed (for reporting in CMS)
+		$run->IsComplete = 1;
+		$run->write();
+		
 		// Find the URL to the LinkCheckAdmin section in the CMS
 		$linkcheckAdminLink = Director::absoluteBaseURL() . singleton('LinkCheckAdmin')->Link();
 		

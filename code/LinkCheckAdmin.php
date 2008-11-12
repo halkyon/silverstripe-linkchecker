@@ -80,12 +80,23 @@ class LinkCheckAdmin extends LeftAndMain {
 		
 		$brokenLinkCount = ($run->BrokenLinks()) ? $run->BrokenLinks()->Count() : 0;
 
-		if($brokenLinkCount == 1) {
-			$resultNumField = new LiteralField('ResultNo', '<p>1 broken link was found</p>');
-		} elseif($brokenLinkCount > 0) {
-			$resultNumField = new LiteralField('ResultNo', "<p>$brokenLinkCount broken links were found</p>");
-		} else {
-			$resultNumField = new LiteralField('ResultNo', '<p>No broken links were found</p>');
+
+		if($run->IsComplete) {	// Run is complete
+			if($brokenLinkCount == 1) {
+				$resultNumField = new LiteralField('ResultNo', '<p>1 broken link was found.</p>');
+			} elseif($brokenLinkCount > 0) {
+				$resultNumField = new LiteralField('ResultNo', "<p>$brokenLinkCount broken links were found.</p>");
+			} else {
+				$resultNumField = new LiteralField('ResultNo', '<p>No broken links were found.</p>');
+			}			
+		} else {	// Run not completed yet
+			if($brokenLinkCount == 1) {
+				$resultNumField = new LiteralField('ResultNo', '<p>This link check run is not completed yet. 1 broken link found so far.</p>');
+			} elseif($brokenLinkCount > 0) {
+				$resultNumField = new LiteralField('ResultNo', "<p>This link check run is not completed yet. $brokenLinkCount broken links found so far.</p>");
+			} else {
+				$resultNumField = new LiteralField('ResultNo', '<p>This link check run is not completed yet. No broken links found so far.</p>');
+			}
 		}
 		
 		$runDate = $run->obj('Created')->Nice();

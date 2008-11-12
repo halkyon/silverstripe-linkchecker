@@ -17,6 +17,10 @@
  */
 class LinkCheckRun extends DataObject {
 	
+	static $db = array(
+		'IsComplete' => 'Boolean'
+	);
+	
 	/**
 	 * A LinkCheckRun can have a {@link Member}
 	 * record that was the CMS user who invoked
@@ -115,6 +119,8 @@ class LinkCheckRun extends DataObject {
 		$table->setPermissions(array(
 			'export'
 		));
+		
+		$table->setPageSize(0);
 		
 		return $table;
 	}
