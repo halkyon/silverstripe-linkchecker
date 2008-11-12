@@ -33,6 +33,7 @@ class LinkCheckTask extends WeeklyTask {
 		
 		// If there is already a LinkCheckRun that exists and is not complete,
 		// don't allow a new run as it could run the server to the ground!
+		// @todo we probably want some system that allows cancelling a check halfway through
 		if(DataObject::get_one('LinkCheckRun', 'IsComplete = 0')) {
 			return 'There is already a link check running at the moment. Please wait for it to complete before starting a new one.';
 		}
