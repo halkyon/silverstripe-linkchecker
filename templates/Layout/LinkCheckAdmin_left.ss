@@ -6,18 +6,18 @@
 	</span>
 
 	<ul id="TreeActions">
-		<li class="action" id="addpage"><button><% _t('START','Start link checker') %></button></li>
-		<li class="action" id="deletepage"><button><% _t('DELETE','Delete') %></button></li>
+		<li class="action" id="addRun"><button><% _t('START','Start link checker') %></button></li>
+		<li class="action" id="deleteRun"><button><% _t('DELETE','Delete') %></button></li>
 	</ul>
 	<div style="clear:both;"></div>
-	<form class="actionparams" id="addpage_options" style="display: none" action="admin/linkcheck/startrun">
+	<form class="actionparams" id="addRun_options" style="display: none" action="admin/linkcheck/startrun">
 		<div>
 		<input type="hidden" name="ParentID" />
 		<input class="action" type="submit" value="<% _t('GO','Go') %>" />
 		</div>
 	</form>
 
-	<form class="actionparams" id="deletepage_options" style="display: none" action="admin/linkcheck/deleterun">
+	<form class="actionparams" id="deleteRun_options" style="display: none" action="admin/linkcheck/deleterun">
 		<p><% _t('SELECTTODEL','Select the items that you want to delete and then click the button below') %></p>
 		<div>		
 		<input type="hidden" name="csvIDs" />

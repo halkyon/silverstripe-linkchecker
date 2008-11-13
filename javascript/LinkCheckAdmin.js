@@ -3,12 +3,12 @@ SiteTreeHandlers.loadPage_url = 'admin/linkcheck/getitem';
 SiteTreeHandlers.controller_url = 'admin/linkcheck';
 
 var _HANDLER_FORMS = {
-	addRun : 'addpage_options',
-	deleteRun : 'deletepage_options'
+	addRun : 'addRun_options',
+	deleteRun : 'deleteRun_options'
 };
 
 addRun = Class.create();
-addRun.applyTo('#addpage');
+addRun.applyTo('#addRun');
 addRun.prototype = {
 	initialize : function () {
 		Observable.applyTo($(this.id + '_options'));
@@ -26,10 +26,10 @@ addRun.prototype = {
 	form_submit : function() {
 		var st = $('sitetree');
 
-		$('addpage_options').elements.ParentID.value = st.getIdxOf(st.firstSelected());		
-		Ajax.SubmitForm('addpage_options', null, {
+		$('addRun_options').elements.ParentID.value = st.getIdxOf(st.firstSelected());		
+		Ajax.SubmitForm('addRun_options', null, {
 			onSuccess : this.onSuccess,
-			onFailure : this.showAddPageError
+			onFailure : this.showAddRunError
 		});
 		return false;
 	},
@@ -39,7 +39,7 @@ addRun.prototype = {
 		Ajax.Evaluator(response);
 	},
 
-	showAddPageError : function(response) {
+	showAddRunError : function(response) {
 		errorMessage('Error starting link check', response);
 	}
 }
@@ -47,10 +47,10 @@ addRun.prototype = {
 deleteRun = {
 	button_onclick : function() {
 		if(treeactions.toggleSelection(this)) {
-			$('deletepage_options').style.display = 'block';
+			$('deleteRun_options').style.display = 'block';
  
 			deleteRun.o1 = $('sitetree').observeMethod('SelectionChanged', deleteRun.treeSelectionChanged);
-			deleteRun.o2 = $('deletepage_options').observeMethod('Close', deleteRun.popupClosed);
+			deleteRun.o2 = $('deleteRun_options').observeMethod('Close', deleteRun.popupClosed);
 			
 			addClass($('sitetree'),'multiselect');
 
@@ -64,7 +64,7 @@ deleteRun = {
 				sel.addNodeClass('selected');		
 			}
 		} else {
-			$('deletepage_options').style.display = 'none';
+			$('deleteRun_options').style.display = 'none';
 		}
 		return false;
 	},
@@ -89,7 +89,7 @@ deleteRun = {
 	popupClosed : function() {
 		removeClass($('sitetree'),'multiselect');
 		$('sitetree').stopObserving(deleteRun.o1);
-		$('deletepage_options').stopObserving(deleteRun.o2);
+		$('deleteRun_options').stopObserving(deleteRun.o2);
 
 		for(var idx in deleteRun.selectedNodes) {
 			if(deleteRun.selectedNodes[idx]) {
@@ -109,22 +109,22 @@ deleteRun = {
 		}
 		if(csvIDs) {
 			if(confirm("Do you really want to delete these links?")) {
-				$('deletepage_options').elements.csvIDs.value = csvIDs;
+				$('deleteRun_options').elements.csvIDs.value = csvIDs;
  
-				Ajax.SubmitForm('deletepage_options', null, {
+				Ajax.SubmitForm('deleteRun_options', null, {
 					onSuccess : function(response) {
 						Ajax.Evaluator(response);
 						var sel;
 						if((sel = $('sitetree').firstSelected()) && sel.parentNode) sel.addNodeClass('current');
 						else $('Form_EditForm').innerHTML = "";
-						treeactions.closeSelection($('deletepage'));
+						treeactions.closeSelection($('deleteRun'));
 					},
 					onFailure : function(response) {
 						errorMessage('Error deleting items', response);
 					}
 				});
  
-				$('deletepage').getElementsByTagName('button')[0].onclick();
+				$('deleteRun').getElementsByTagName('button')[0].onclick();
 			}
 		} else {
 			alert("Please select at least one item.");
@@ -135,16 +135,16 @@ deleteRun = {
 	
 	submit_success: function(response) {
 		Ajax.Evaluator(response);
-		treeactions.closeSelection($('deletepage'));
+		treeactions.closeSelection($('deleteRun'));
 	}
 }
 
 appendLoader(function () {
-	Observable.applyTo($('deletepage_options'));
-	if($('deletepage')) {
-		$('deletepage').onclick = deleteRun.button_onclick;
-		$('deletepage').getElementsByTagName('button')[0].onclick = function() { return false; };
-		$('deletepage_options').onsubmit = deleteRun.form_submit;
+	Observable.applyTo($('deleteRun_options'));
+	if($('deleteRun')) {
+		$('deleteRun').onclick = deleteRun.button_onclick;
+		$('deleteRun').getElementsByTagName('button')[0].onclick = function() { return false; };
+		$('deleteRun_options').onsubmit = deleteRun.form_submit;
 	}
 	
 	new CheckBoxRange($('Form_EditForm'), 'Files[]');
