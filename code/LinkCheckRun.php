@@ -79,13 +79,6 @@ class LinkCheckRun extends DataObject {
 		if($brokenLinks && ($brokenLinks->Count() > 0)) {
 			$table = $this->brokenLinksTable();
 			$fields->push($table);
-		} else {
-			$fields->push(
-				new LiteralField(
-					'NoResults',
-					'<p>' . _t('LinkCheckRun.NORESULTS', 'Congratulations, no broken links were found on this site!') . '</p>'
-				)
-			);
 		}
 		
 		return $fields;
