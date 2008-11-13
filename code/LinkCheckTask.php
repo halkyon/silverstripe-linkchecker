@@ -88,6 +88,7 @@ class LinkCheckTask extends WeeklyTask {
 		}
 		
 		// Mark as done - this is to indicate that the task has completed (for reporting in CMS)
+		$run->FinishDate = date('Y-m-d H:i:s');
 		$run->IsComplete = 1;
 		$run->write();
 		

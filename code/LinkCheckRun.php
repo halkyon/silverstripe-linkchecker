@@ -18,7 +18,8 @@
 class LinkCheckRun extends DataObject {
 	
 	static $db = array(
-		'IsComplete' => 'Boolean'
+		'IsComplete' => 'Boolean',
+		'FinishDate' => 'SSDatetime'
 	);
 	
 	/**
