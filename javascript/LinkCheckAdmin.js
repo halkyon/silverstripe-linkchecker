@@ -19,6 +19,7 @@ addRun.prototype = {
 	onclick : function() {
 		statusMessage('Starting new link check run...');
 		$('startRunLoading').style.display = 'inline';
+		$('Form_EditForm').style.display = 'none';
 		this.form_submit();
 		return false;
 	},
@@ -36,6 +37,7 @@ addRun.prototype = {
 
 	onSuccess : function(response) {
 		$('startRunLoading').style.display = 'none';
+		$('Form_EditForm').style.display = 'block';
 		Ajax.Evaluator(response);
 	},
 
