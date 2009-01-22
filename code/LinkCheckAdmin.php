@@ -15,6 +15,12 @@
  */
 class LinkCheckAdmin extends LeftAndMain {
 	
+	static $url_segment = 'linkcheck';
+	
+	static $url_rule = '/$Action/$ID';
+	
+	static $menu_title = 'Link Checker';
+	
 	public static $tree_class = 'LinkCheckRun';
 
 	public function init() {
