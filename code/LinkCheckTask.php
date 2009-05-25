@@ -89,6 +89,9 @@ class LinkCheckTask extends WeeklyTask {
 			$pagesChecked++;
 		}
 		
+		// Memory cleanup
+		unset($pages);
+		
 		// Mark as done - this is to indicate that the task has completed (for reporting in CMS)
 		$run->FinishDate = date('Y-m-d H:i:s');
 		$run->IsComplete = 1;
@@ -106,16 +109,28 @@ class LinkCheckTask extends WeeklyTask {
 				'Date' => $run->obj('Created')->Nice(),
 				'LinkCheckRunID' => $run->ID
 			);
-		} else {
+		} elseif(Director::is_cli()) {
 			echo "SilverStripe Link Checker results\n";
 			echo "---------------------------------\n\n";
 			
+			echo "$pagesChecked pages were checked for broken links.\n";
 			echo "$goodLinks links were OK.\n";
 			echo "$checkLinks links were redirected.\n";
 			echo "$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.\n\n";
 			
 			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
 			echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
+		} else {
+			echo "<h1>SilverStripe Link Checker results</h1>";
+			
+			echo '<ul>';
+			echo "<li>$pagesChecked pages were checked for broken links.</li>";
+			echo "<li>$goodLinks links were OK.</li>";
+			echo "<li>$checkLinks links were redirected.</li>";
+			echo "<li>$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.</li>";
+			
+			echo "<p>LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.</p>";
+			echo "<p>Please visit <a href=\"$linkcheckAdminLink\">$linkcheckAdminLink</a> to see which broken links were found.</p>";
 		}
 	}
 	
