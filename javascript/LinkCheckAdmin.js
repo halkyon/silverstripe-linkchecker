@@ -1,6 +1,7 @@
 if(typeof SiteTreeHandlers == 'undefined') SiteTreeHandlers = {};
 SiteTreeHandlers.loadPage_url = 'admin/linkcheck/getitem';
 SiteTreeHandlers.controller_url = 'admin/linkcheck';
+SiteTreeHandlers.showRecord_url = 'admin/linkcheck/show/';
 
 var _HANDLER_FORMS = {
 	addRun : 'addRun_options',
