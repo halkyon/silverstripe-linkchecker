@@ -128,6 +128,7 @@ class LinkCheckTask extends WeeklyTask {
 			echo "<li>$goodLinks links were OK.</li>";
 			echo "<li>$checkLinks links were redirected.</li>";
 			echo "<li>$brokenLinks links were broken, and {$runBrokenLinks} BrokenLink records were generated for them.</li>";
+			echo '</ul>';
 			
 			echo "<p>LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.</p>";
 			echo "<p>Please visit <a href=\"$linkcheckAdminLink\">$linkcheckAdminLink</a> to see which broken links were found.</p>";
