@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Link checker CMS interface.
  * 
@@ -203,5 +202,3 @@ class LinkCheckAdmin extends LeftAndMain {
 	}
 	
 }
-
-?>

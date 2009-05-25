@@ -1,5 +1,4 @@
 <?php
-
 /**
  * LinkCheckRun is a simple DataObject that
  * represents a single run of the link checker
@@ -19,6 +18,7 @@ class LinkCheckRun extends DataObject {
 	
 	static $db = array(
 		'IsComplete' => 'Boolean',
+		'PagesChecked' => 'Int',
 		'FinishDate' => 'SSDatetime'
 	);
 	
@@ -148,5 +148,3 @@ class LinkCheckRun extends DataObject {
 	}
 	
 }
-
-?>

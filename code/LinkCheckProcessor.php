@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class handles taking a URL, taking the HTML that
  * is returned from a URL - then extracting all the href
@@ -312,5 +311,3 @@ class LinkCheckProcessor extends Object {
 	}
 	
 }
-
-?>

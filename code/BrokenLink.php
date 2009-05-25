@@ -1,5 +1,4 @@
 <?php
-
 /**
  * A BrokenLink is a simple DataObject that
  * represents a single broken link on a page.
@@ -66,5 +65,3 @@ class BrokenLink extends DataObject {
 	}
 	
 }
-
-?>

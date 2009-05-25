@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This is a task designed to be run weekly
  * that goes through each {@link Page} instance
@@ -55,7 +54,8 @@ class LinkCheckTask extends WeeklyTask {
 		
 		$run = new LinkCheckRun(); // We have started a new run, create the object and write it
 		$run->write();
-
+		
+		$pagesChecked = 0;
 		foreach($pages as $page) {
 			if(in_array($page->class, $this->stat('exempt_classes'))) {
 				break;
@@ -85,11 +85,14 @@ class LinkCheckTask extends WeeklyTask {
 					$brokenLink->write();
 				}
 			}
+			
+			$pagesChecked++;
 		}
 		
 		// Mark as done - this is to indicate that the task has completed (for reporting in CMS)
 		$run->FinishDate = date('Y-m-d H:i:s');
 		$run->IsComplete = 1;
+		$run->PagesChecked = $pagesChecked;
 		$run->write();
 		
 		// Find the URL to the LinkCheckAdmin section in the CMS
@@ -117,5 +120,3 @@ class LinkCheckTask extends WeeklyTask {
 	}
 	
 }
-
-?>
