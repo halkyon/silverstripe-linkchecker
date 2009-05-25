@@ -87,14 +87,15 @@ class LinkCheckAdmin extends LeftAndMain {
 		$brokenLinkCount = ($run->BrokenLinks()) ? $run->BrokenLinks()->Count() : 0;
 
 		$finishedDate = $run->obj('FinishDate')->Nice();
+		$pagesChecked = $run->PagesChecked;
 
 		if($run->IsComplete) {	// Run is complete
 			if($brokenLinkCount == 1) {
-				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. 1 broken link was found.</p>");
+				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. $pagesChecked pages were checked. 1 broken link was found.</p>");
 			} elseif($brokenLinkCount > 0) {
-				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. $brokenLinkCount broken links were found.</p>");
+				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. $pagesChecked pages were checked. $brokenLinkCount broken links were found.</p>");
 			} else {
-				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. No broken links were found.</p>");
+				$resultNumField = new LiteralField('ResultNo', "<p>Finished at {$finishedDate}. $pagesChecked pages were checked. No broken links were found.</p>");
 			}
 			
 		} else {	// Run not completed yet
@@ -186,9 +187,9 @@ class LinkCheckAdmin extends LeftAndMain {
 			foreach($ids as $id) {
 				if(is_numeric($id)) {
 					$record = DataObject::get_by_id('LinkCheckRun', $id);
+					$script .= $this->deleteTreeNodeJS($record);
 					$record->delete();
 					$record->destroy();
-					$script .= $this->deleteTreeNodeJS($record);
 				}
 			}
 		}
