@@ -24,9 +24,7 @@ class LinkCheckAdmin extends LeftAndMain {
 
 	public function init() {
 		parent::init();
-		
 		Requirements::javascript('linkchecker/javascript/LinkCheckAdmin.js');
-		
 		Requirements::css('linkchecker/css/LinkCheckAdmin.css');
 	}
 	
@@ -67,6 +65,8 @@ class LinkCheckAdmin extends LeftAndMain {
 	 * is accessible from the URL as the "ID" parameter.
 	 * 
 	 * @uses LinkCheckAdmin->getLinkCheckRun()
+	 * @todo Fix up the hardcoded english strings
+	 * @todo Split functionality to separate methods
 	 * 
 	 * @return Form
 	 */
@@ -136,13 +136,11 @@ class LinkCheckAdmin extends LeftAndMain {
 		);
 		
 		$form->loadDataFrom($run);
-		
 		return $form;
 	}
 	
 	public function save($data, $form) {
 		$validationErrors = false;
-		
 		$run = DataObject::get_by_id('LinkCheckRun', (int) $data['LinkCheckRunID']);
 		if(!$run) $validationErrors = true;
 		
@@ -155,7 +153,6 @@ class LinkCheckAdmin extends LeftAndMain {
 		$run->write();
 		
 		FormResponse::status_message('Saved', 'good');
-
 		return FormResponse::respond();
 	}
 	

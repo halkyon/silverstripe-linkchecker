@@ -13,5 +13,3 @@ if(!class_exists('CMSMenu')) {
 Director::addRules(100, array(
 	'admin/linkcheck/$Action/$ID' => 'LinkCheckAdmin',
 ));
-
-?>

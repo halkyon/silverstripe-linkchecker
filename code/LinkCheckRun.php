@@ -126,7 +126,6 @@ class LinkCheckRun extends DataObject {
 	 */
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
 		$this->MemberID = Member::currentUserID() ? Member::currentUserID() : 0;
 	}
 	
@@ -138,7 +137,6 @@ class LinkCheckRun extends DataObject {
 	 */
 	public function onBeforeDelete() {
 		parent::onBeforeDelete();
-		
 		$brokenLinks = $this->BrokenLinks();
 		if($brokenLinks && ($brokenLinks->Count() > 0)) {
 			foreach($brokenLinks as $brokenLink) {
@@ -146,5 +144,5 @@ class LinkCheckRun extends DataObject {
 			}
 		}
 	}
-	
+
 }

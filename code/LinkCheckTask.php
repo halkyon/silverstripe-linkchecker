@@ -21,23 +21,52 @@ class LinkCheckTask extends WeeklyTask {
 	 * 
 	 * @var array
 	 */
-	public static $exempt_classes = array(
+	protected static $exempt_classes = array(
 		'ErrorPage',
 		'ForumPage',
 		'RedirectorPage'
 	);
 	
 	/**
+	 * Add a class to the exempt page types array.
+	 * @param string $class The class to add
+	 */
+	public static function add_extempt_class($class) {
+		if(!in_array($class, self::$exempt_classes)) {
+			self::$exempt_classes[] = $class;
+		}
+	}
+
+	/**
+	 * Remove a class from the exempt page types array.
+	 * @param string $class The class to remove
+	 */
+	public static function remove_exempt_class($class) {
+		foreach(self::$exempt_classes as $index => $exemptClass) {
+			if($exemptClass == $class) unset(self::$exempt_classes[$index]);
+		}
+	}
+	
+	/**
 	 * Run the LinkCheckTask.
+	 * @todo Split functionality to separate methods
 	 */
 	public function process() {
+		echo "\r\n";
+		
+		if(!ClassInfo::hasTable('LinkCheckRun')) {
+			if(!Director::is_ajax()) {
+				echo "Database has not been built. Please run dev/build first!\r\n";
+			}
+			return false;
+		}
 		
 		// If there is already a LinkCheckRun that exists and is not complete,
 		// don't allow a new run as it could run the server to the ground!
 		// @todo we probably want some system that allows cancelling a check halfway through
 		if(DataObject::get_one('LinkCheckRun', 'IsComplete = 0')) {
 			if(!Director::is_ajax()) {
-				echo 'There is already a link check running at the moment. Please wait for it to complete before starting a new one.';
+				echo "There is already a link check running at the moment. Please wait for it to complete before starting a new one.\r\n";
 			}
 			return false;
 		}
@@ -57,7 +86,7 @@ class LinkCheckTask extends WeeklyTask {
 		
 		$pagesChecked = 0;
 		foreach($pages as $page) {
-			if(in_array($page->class, $this->stat('exempt_classes'))) {
+			if(in_array($page->class, self::$exempt_classes)) {
 				break;
 			}
 			

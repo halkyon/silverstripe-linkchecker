@@ -15,8 +15,8 @@
  * 
  * @package linkchecker
  */
-class LinkCheckProcessor extends Object {
-
+class LinkCheckProcessor {
+	
 	/**
 	 * The agent name for this process used in HTTP headers.
 	 * @var string
