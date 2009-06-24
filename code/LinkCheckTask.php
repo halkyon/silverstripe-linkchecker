@@ -31,7 +31,7 @@ class LinkCheckTask extends WeeklyTask {
 	 * Add a class to the exempt page types array.
 	 * @param string $class The class to add
 	 */
-	public static function add_extempt_class($class) {
+	public static function add_exempt_class($class) {
 		if(!in_array($class, self::$exempt_classes)) {
 			self::$exempt_classes[] = $class;
 		}
