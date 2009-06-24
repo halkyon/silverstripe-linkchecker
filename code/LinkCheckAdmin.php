@@ -9,6 +9,7 @@
  * broken link on a link check "run".
  * 
  * @uses LinkCheckRun to create a list of link check runs
+ * @todo Use ModelAdmin instead of specific LeftAndMain subclass
  * 
  * @package linkchecker
  */
