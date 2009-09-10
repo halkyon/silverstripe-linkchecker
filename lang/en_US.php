@@ -3,7 +3,7 @@
 global $lang;
 
 $lang['en_US']['LinkCheckAdmin']['MENUTITLE'] = array(
-	'LinkCheck',
+	'Link Checker',
 	100,
 	'Menu title'
 );
