@@ -21,29 +21,23 @@ class LinkCheckTask extends WeeklyTask {
 	 * 
 	 * @var array
 	 */
-	protected static $exempt_classes = array(
-		'ErrorPage',
-		'ForumPage',
-		'RedirectorPage'
-	);
+	protected static $exempt_classes = array();
 	
 	/**
-	 * Add a class to the exempt page types array.
+	 * Add a class to the array.
 	 * @param string $class The class to add
 	 */
 	public static function add_exempt_class($class) {
-		if(!in_array($class, self::$exempt_classes)) {
-			self::$exempt_classes[] = $class;
-		}
+		self::$exempt_classes[$class] = $class;
 	}
 
 	/**
-	 * Remove a class from the exempt page types array.
+	 * Remove a class from the exempt array.
 	 * @param string $class The class to remove
 	 */
 	public static function remove_exempt_class($class) {
-		foreach(self::$exempt_classes as $index => $exemptClass) {
-			if($exemptClass == $class) unset(self::$exempt_classes[$index]);
+		if(isset(self::$exempt_classes[$class])) {
+			unset(self::$exempt_classes[$class]);
 		}
 	}
 	
@@ -86,9 +80,8 @@ class LinkCheckTask extends WeeklyTask {
 		
 		$pagesChecked = 0;
 		foreach($pages as $page) {
-			
-			// If the page shouldn't be checked - skip onto the next
-			if(in_array(get_class($page), self::$exempt_classes)) {
+			// Skip this page if it shouldn't be checked
+			if(isset(self::$exempt_classes[get_class($page)])) {
 				continue;
 			}
 			
