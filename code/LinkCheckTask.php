@@ -86,13 +86,18 @@ class LinkCheckTask extends WeeklyTask {
 		
 		$pagesChecked = 0;
 		foreach($pages as $page) {
-			if(in_array($page->class, self::$exempt_classes)) {
-				break;
+			
+			// If the page shouldn't be checked - skip onto the next
+			if(in_array(get_class($page), self::$exempt_classes)) {
+				continue;
 			}
 			
 			$processor = new LinkCheckProcessor($page->AbsoluteLink());
 			if(Director::is_ajax()) $processor->showMessages = false;
 			$results = $processor->run();
+			
+			// Memory cleanup - we don't need the processor anymore
+			unset($processor);
 			
 			if($results) foreach($results as $result) {
 				if($result['Code'] >= 200 && $result['Code'] <= 299) {
@@ -112,6 +117,9 @@ class LinkCheckTask extends WeeklyTask {
 					$brokenLink->LinkCheckRunID = $run->ID;
 					$brokenLink->PageID = $page->ID;
 					$brokenLink->write();
+					
+					// Memory cleanup
+					$brokenLink->destroy();
 				}
 			}
 			
