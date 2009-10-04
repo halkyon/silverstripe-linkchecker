@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Tests for the linkchecker module.
+ * 
+ * @package linkchecker
+ */
 class LinkCheckTest extends SapphireTest {
 	
 	function testUrlExists() {
@@ -48,5 +52,3 @@ class LinkCheckTest extends SapphireTest {
 	}
 	
 }
-
-?>
