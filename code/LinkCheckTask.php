@@ -123,6 +123,9 @@ class LinkCheckTask extends WeeklyTask {
 				}
 			}
 			
+			// Memory cleanup
+			$page->destroy();
+			
 			$pagesChecked++;
 		}
 		
