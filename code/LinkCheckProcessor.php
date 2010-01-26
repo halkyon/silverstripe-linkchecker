@@ -177,7 +177,15 @@ class LinkCheckProcessor {
 						}
 					}
 				} elseif(substr($matches[1][$i] , 0, 7) != 'http://' && substr($matches[1][$i], 0, 8) != 'https://') { // do any links left without root
+					/*
+					We can't use $url_info['host'].$url_info['path'] since it breaks in the following situations:
+					1. in a page (http://localhost/mysite/page1) link as '<a href="page2">Page2</a>', the rendered link becomes http://localhost/mysite/page1/page2.
+					2. in a page (http://www.mysite.com/page1) link as '<a href="page2">Page2</a>', the rendered link becomes http://www.mysite.com/page1/page2.
+					3. in a page (http://mysite.localhost/page1) link as '<a href="page2">Page2</a>', the rendered link becomes http://mysite.localhost/page1/page2.
+					i.e. it is always rendered as a nested url if the current page is not "/", which causes a false alerm in normal case (NestedURL module is not used)				
 					$links[] = $url_info['scheme'] . '://' . $url_info['host'] . $url_info['path'] . $matches[1][$i];
+					*/
+					$links[] = Director::absoluteBaseURL() . $matches[1][$i];
 				} else {
 					$links[] = $matches[1][$i];
 				}	
