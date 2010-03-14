@@ -101,7 +101,7 @@ class LinkCheckRun extends DataObject {
 			'BrokenLinks',
 			'BrokenLink',
 			$SNG_brokenLink->tableOverviewFields(),
-			"LinkCheckRunID = $this->ID"
+			"\"LinkCheckRunID\" = $this->ID"
 		);
 		
 		$table->setFieldFormatting(array(
