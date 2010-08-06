@@ -4,8 +4,12 @@
  * 
  * @package linkchecker
  */
-class LinkCheckTest extends SapphireTest {
-	
+class LinkCheckTest extends FunctionalTest {
+
+	public static $fixture_file = 'linkchecker/tests/LinkCheckTest.yml';
+
+	public static $use_draft_site = true;
+
 	function testUrlExists() {
 		$processor = new LinkCheckProcessor('test');
 		$redirectUrl = 'http://doc.silverstripe.com';
@@ -50,5 +54,22 @@ class LinkCheckTest extends SapphireTest {
 		$this->assertEquals($status[0], 404);
 		$this->assertEquals($status[1], 'Not Found');
 	}
-	
+
+	function testRun() {
+		$page = $this->objFromFixture('Page', 'test-page');
+		$processor = new LinkCheckProcessor($page->AbsoluteLink());
+		$processor->run();
+	}
+
+	function testExtractLinks() {
+		$page = $this->objFromFixture('Page', 'test-page');
+		$processor = new LinkCheckProcessor($page->AbsoluteLink());
+		
+		$links = $processor->extractLinks($page->Content, $page->AbsoluteLink());
+		$this->assertTrue(strpos(
+			$links[0],
+			'blahsdfsfsdkfjsdjghsdifsdkjfndskjfdskf'
+		) !== false);
+	}
+
 }

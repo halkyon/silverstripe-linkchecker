@@ -133,7 +133,7 @@ class LinkCheckProcessor {
 	 * @param string $url The URL the HTML came from (used to make absolute links)
 	 * @return array List of all the links extracted from the HTML
 	 */
-	protected function extractLinks($html, $url) {
+	public function extractLinks($html, $url) {
 		$links = array();
 		$url_info = parse_url($url);
 		
@@ -201,7 +201,7 @@ class LinkCheckProcessor {
 	 * @param string $url The URL to get
 	 * @return mixed string contents or false
 	 */
-	protected function fetchHTML($url) {
+	public function fetchHTML($url) {
 		$contents = '';
 		
 		ini_set('user_agent', 'User-Agent: ' . self::$agent_name);
