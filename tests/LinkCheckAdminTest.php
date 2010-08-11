@@ -35,11 +35,11 @@ class LinkCheckAdminTest extends FunctionalTest {
 
 	public function testStartRunDoesntHappenWhenExistingRun() {
 		$linkcheck = $this->objFromFixture('LinkCheckRun', 'test-run');
-		$response = $this->get('admin/linkcheck/startrun');
+		$this->get('admin/linkcheck/startrun');
 		$this->assertEquals(1, DataObject::get('LinkCheckRun')->Count());
 		$linkcheck->IsComplete = true;
 		$linkcheck->write();
-		$response = $this->get('admin/linkcheck/startrun');
+		$this->get('admin/linkcheck/startrun');
 		$this->assertEquals(2, DataObject::get('LinkCheckRun')->Count());
 	}
 
