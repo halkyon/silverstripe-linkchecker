@@ -1,3 +1,12 @@
+Page:
+   home:
+      Title: Home
+      URLSegment: home
+      Content: Some content here for the home page
+   about-us:
+      Title: About Us
+      URLSegment: about-us
+      Content: There is a <a href="home">good link</a> and a <a href="sdfdsfdsfdsfdsfdsfsdfsdfdsf.com">bad link</a>
 LinkCheckRun:
    test-run:
-      
+      IsComplete: 0
