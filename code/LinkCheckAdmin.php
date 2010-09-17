@@ -162,11 +162,14 @@ class LinkCheckAdmin extends LeftAndMain {
 		$result = $task->process();
 		$script = '';
 		
+		if(SapphireTest::is_running_test()) return;
+		
 		if(!$result) {
 			FormResponse::status_message(
 				'There is already a link check running at the moment. Please wait for it to complete before starting a new one.',
 				'bad'
 			);
+			
 			return FormResponse::respond();
 		}
 		
@@ -196,6 +199,9 @@ class LinkCheckAdmin extends LeftAndMain {
 		else $message = $size . ' ' . _t('LinkCheckAdmin.FOLDERDELETED', 'link check run deleted');
 
 		$script .= "statusMessage('$message');";
+		
+		if(SapphireTest::is_running_test()) return;
+		
 		echo $script;
 	}
 	

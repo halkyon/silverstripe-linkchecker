@@ -47,6 +47,8 @@ class LinkCheckProcessor {
 	 */
 	function __construct($url) {
 		$this->url = $url;
+		
+		if(SapphireTest::is_running_test()) $this->showMessages = false;
 	}
 	
 	/**
