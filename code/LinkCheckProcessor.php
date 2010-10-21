@@ -65,7 +65,7 @@ class LinkCheckProcessor {
 		set_time_limit(0);
 		
 		// This is used for ob_flush to work
-		if(ob_get_length() === false) ob_start();
+		if(ob_get_length() === false && $this->showMessages) ob_start();
 		
 		$html = $this->fetchHTML($this->url);
 
@@ -92,8 +92,10 @@ class LinkCheckProcessor {
 		
 		if($this->showMessages) echo "Found {$linkCount} links on {$this->url}\r\n";
 
-		flush();
-		ob_flush();
+		if($this->showMessages) {
+			flush();
+			ob_flush();
+		}
 
 		// Each unique link needs to be checked to see what status code is returned
 		for($i = 0; isset($links[$i]) && !connection_aborted(); ++$i) {
@@ -118,10 +120,16 @@ class LinkCheckProcessor {
 				$result[$i]['Status'] = 'Page not found';
 			}
 
-			flush();
-			ob_flush();
+			if($this->showMessages) {
+				flush();
+				ob_flush();
+			}
 		}
-		
+
+		if($this->showMessages) {
+			ob_end_flush();
+		}
+
 		return $result;
 	}
 
