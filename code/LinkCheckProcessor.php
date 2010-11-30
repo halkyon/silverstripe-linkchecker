@@ -48,7 +48,7 @@ class LinkCheckProcessor {
 	function __construct($url) {
 		$this->url = $url;
 		
-		if(SapphireTest::is_running_test()) $this->showMessages = false;
+		if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) $this->showMessages = false;
 	}
 	
 	/**

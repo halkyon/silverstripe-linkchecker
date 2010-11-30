@@ -162,7 +162,7 @@ class LinkCheckAdmin extends LeftAndMain {
 		$result = $task->process();
 		$script = '';
 		
-		if(SapphireTest::is_running_test()) return;
+		if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) return;
 		
 		if(!$result) {
 			FormResponse::status_message(
@@ -200,7 +200,7 @@ class LinkCheckAdmin extends LeftAndMain {
 
 		$script .= "statusMessage('$message');";
 		
-		if(SapphireTest::is_running_test()) return;
+		if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) return;
 		
 		echo $script;
 	}

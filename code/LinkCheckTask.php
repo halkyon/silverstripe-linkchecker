@@ -46,10 +46,10 @@ class LinkCheckTask extends WeeklyTask {
 	 * @todo Split functionality to separate methods
 	 */
 	public function process() {
-		if(!SapphireTest::is_running_test()) echo "\r\n";
+		if(class_exists('SapphireTest', false) && !SapphireTest::is_running_test()) echo "\r\n";
 		
 		if(!ClassInfo::hasTable('LinkCheckRun')) {
-			if(!Director::is_ajax() && !SapphireTest::is_running_test()) {
+			if(!Director::is_ajax() && class_exists('SapphireTest', false) && !SapphireTest::is_running_test()) {
 				echo "Database has not been built. Please run dev/build first!\r\n";
 			}
 			return false;
@@ -59,7 +59,7 @@ class LinkCheckTask extends WeeklyTask {
 		// don't allow a new run as it could run the server to the ground!
 		// @todo we probably want some system that allows cancelling a check halfway through
 		if(DataObject::get_one('LinkCheckRun', "\"IsComplete\" = 0")) {
-			if(!Director::is_ajax() && !SapphireTest::is_running_test()) {
+			if(!Director::is_ajax() && class_exists('SapphireTest', false) && !SapphireTest::is_running_test()) {
 				echo "There is already a link check running at the moment. Please wait for it to complete before starting a new one.\r\n";
 			}
 			return false;
@@ -143,7 +143,7 @@ class LinkCheckTask extends WeeklyTask {
 				'LinkCheckRunID' => $run->ID
 			);
 		} elseif(Director::is_cli()) {
-			if(SapphireTest::is_running_test()) return;
+			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) return;
 			
 			echo "SilverStripe Link Checker results\n";
 			echo "---------------------------------\n\n";
@@ -156,7 +156,7 @@ class LinkCheckTask extends WeeklyTask {
 			echo "LinkCheckRun ID #{$run->ID} was created with {$runBrokenLinks} BrokenLink related records.\n";
 			echo "Please visit $linkcheckAdminLink to see which broken links were found.\n\n";
 		} else {
-			if(SapphireTest::is_running_test()) return;
+			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) return;
 			
 			echo "<h1>SilverStripe Link Checker results</h1>";
 			
