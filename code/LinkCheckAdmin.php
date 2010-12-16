@@ -71,7 +71,7 @@ class LinkCheckAdmin extends LeftAndMain {
 	 * 
 	 * @return Form
 	 */
-	public function getEditForm($id) {
+	public function getEditForm($id = null) {
 		$run = $this->getLinkCheckRun($id);
 		if(!$run) return false;
 		
