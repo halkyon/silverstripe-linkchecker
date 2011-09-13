@@ -12,14 +12,14 @@ class LinkCheckTest extends FunctionalTest {
 
 	function testUrlExists() {
 		$processor = new LinkCheckProcessor('test');
-		$redirectUrl = 'http://doc.silverstripe.com';
+		$redirectUrl = 'http://doc.silverstripe.org/';
 		
 		$this->assertTrue($processor->urlExists($redirectUrl));
 	}
 	
 	function testSiteDoesExist() {
 		$processor = new LinkCheckProcessor('test');
-		$redirectUrl = 'http://silverstripe.com';
+		$redirectUrl = 'http://www.silverstripe.com/';
 				
 		$this->assertTrue($processor->urlExists($redirectUrl));
 	}
@@ -33,7 +33,7 @@ class LinkCheckTest extends FunctionalTest {
 	
 	function testCorrectStatusCodeFor200() {
 		$processor = new LinkCheckProcessor('test');
-		$brokenUrl = 'http://silverstripe.com';
+		$brokenUrl = 'http://www.silverstripe.com/';
 		
 		$headers = $processor->fetchHeaders($brokenUrl);
 		
@@ -45,7 +45,7 @@ class LinkCheckTest extends FunctionalTest {
 	
 	function testCorrectStatusCodeFor404() {
 		$processor = new LinkCheckProcessor('test');
-		$brokenUrl = 'http://silverstripe.com/a-page-that-does-not-exist';
+		$brokenUrl = 'http://www.silverstripe.com/a-page-that-does-not-exist';
 		
 		$headers = $processor->fetchHeaders($brokenUrl);
 		
